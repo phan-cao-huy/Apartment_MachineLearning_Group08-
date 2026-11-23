@@ -1,0 +1,55 @@
+{
+  "numpy_version": "2.5.5",
+  "formula_check": {
+    "threshold": 1.5,
+    "gain": 4.333333333333333,
+    "left_weight": -1.3333333333333333,
+    "right_weight": 1.3333333333333333
+  },
+  "library_versions": {
+    "xgboost": "3.4.1",
+    "lightgbm": "4.7.0"
+  },
+  "synthetic_max_abs_error": {
+    "XGBoost": 1.5894571925301193e-07,
+    "LightGBM": 4.440892098500626e-16
+  },
+  "dataset": "data/processed/hanoi_apt_clean_5k.csv",
+  "train_rows": 184532,
+  "test_rows": 4761,
+  "test_dates": [
+    "2026-03-24",
+    "2026-03-30"
+  ],
+  "features": [
+    "area_m2",
+    "bedrooms",
+    "bathrooms",
+    "has_red_book",
+    "interior_level"
+  ],
+  "parameters": {
+    "rounds": 30,
+    "max_depth": 3,
+    "learning_rate": 0.1,
+    "lambda_l2": 1.0
+  },
+  "test_metrics": {
+    "Mean log-price": {
+      "rmse_log": 0.3069425003860385,
+      "mape_price_pct": 21.771516421201543
+    },
+    "Custom": {
+      "rmse_log": 0.29208777825748433,
+      "mape_price_pct": 20.987960462581885
+    },
+    "XGBoost": {
+      "rmse_log": 0.29208774065847515,
+      "mape_price_pct": 20.987959662275006
+    },
+    "LightGBM": {
+      "rmse_log": 0.292318608648211,
+      "mape_price_pct": 20.99846062032964
+    }
+  }
+}

@@ -1,6 +1,9 @@
 """Exact greedy Newton tree boosting for squared-error regression."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
+from numbers import Integral
 
 import numpy as np
 
@@ -11,8 +14,8 @@ class Node:
     feature: int = -1
     threshold: float = 0.0
     gain: float = 0.0
-    left: "Node | None" = None
-    right: "Node | None" = None
+    left: Node | None = None
+    right: Node | None = None
 
 
 class XGBRegressorCustom:
@@ -20,9 +23,12 @@ class XGBRegressorCustom:
 
     def __init__(self, n_estimators=30, max_depth=3, learning_rate=0.1,
                  reg_lambda=1.0, gamma=0.0, min_child_weight=1.0):
-        if n_estimators < 1 or max_depth < 0 or not 0 < learning_rate <= 1:
+        if (not isinstance(n_estimators, Integral) or n_estimators < 1
+                or not isinstance(max_depth, Integral) or max_depth < 0
+                or not 0 < learning_rate <= 1):
             raise ValueError("Invalid number of trees, depth or learning rate")
-        if reg_lambda < 0 or gamma < 0 or min_child_weight < 0:
+        regularization = np.array([reg_lambda, gamma, min_child_weight])
+        if not np.isfinite(regularization).all() or (regularization < 0).any():
             raise ValueError("Regularization and minimum child weight must be nonnegative")
         self.n_estimators = n_estimators
         self.max_depth = max_depth
