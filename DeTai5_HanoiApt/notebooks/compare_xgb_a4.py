@@ -1,6 +1,7 @@
 """Compare the A.4 implementation against XGBoost and LightGBM.
 
-Run from the project directory with python -m notebooks.compare_xgb_a4.
+Run this file directly or use python -m notebooks.compare_xgb_a4
+from the project directory.
 The loss, optimal leaf weight and split score follow Chen and Guestrin
 (2016), equations 5–7: https://arxiv.org/abs/1603.02754.
 The CSV is the merged snapshot produced by 01_data_audit_and_clean.ipynb.
@@ -8,15 +9,22 @@ The CSV is the merged snapshot produced by 01_data_audit_and_clean.ipynb.
 
 import argparse
 import csv
+import importlib
+import importlib.util
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
 
-from src.xgb_custom import XGBRegressorCustom
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if __package__ in (None, ""):
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.xgb_custom import XGBRegressorCustom  # noqa: E402
 
 FEATURES = ("area_m2", "bedrooms", "bathrooms", "has_red_book", "interior_level")
-DEFAULT_DATA = Path("data/processed/hanoi_apt_clean_5k.csv")
+DEFAULT_DATA = PROJECT_ROOT / "data/processed/hanoi_apt_clean_5k.csv"
 
 
 def verify_formula():
@@ -60,8 +68,8 @@ def load_data(path):
 
 
 def compare_libraries(formula):
-    import lightgbm as lgb
-    import xgboost as xgb
+    lgb = importlib.import_module("lightgbm")
+    xgb = importlib.import_module("xgboost")
 
     X, y, expected, _ = formula
     # The libraries score the split without the paper’s factor of 1/2.
@@ -96,8 +104,8 @@ def benchmark(data, include_libraries):
     scores = {"Mean log-price": metrics(train_y.mean()),
               "Custom": metrics(custom.predict(test_X))}
     if include_libraries:
-        import lightgbm as lgb
-        import xgboost as xgb
+        lgb = importlib.import_module("lightgbm")
+        xgb = importlib.import_module("xgboost")
 
         train = xgb.DMatrix(train_X, label=train_y, nthread=1)
         exact = xgb.train({"objective": "reg:squarederror", "tree_method": "exact",
@@ -130,9 +138,18 @@ def main():
     formula = verify_formula()
     result = {"numpy_version": np.__version__, "formula_check": formula[-1]}
     if not args.check_formula:
-        if not args.custom_only:
+        missing = [] if args.custom_only else [
+            name for name in ("xgboost", "lightgbm")
+            if importlib.util.find_spec(name) is None
+        ]
+        include_libraries = not args.custom_only and not missing
+        if missing:
+            result["missing_comparison_libraries"] = missing
+            print("Running the custom benchmark only. For the full comparison, run: "
+                  "python -m pip install xgboost lightgbm", file=sys.stderr)
+        if include_libraries:
             result.update(compare_libraries(formula))
-        result.update(benchmark(args.data, include_libraries=not args.custom_only))
+        result.update(benchmark(args.data, include_libraries=include_libraries))
     payload = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
