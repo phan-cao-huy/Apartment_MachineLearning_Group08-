@@ -1,0 +1,33 @@
+\section{Kết quả thực nghiệm}
+Tập huấn luyện gồm 108.337 tin chia thành ba fold, lần lượt có 36.113, 36.112 và 36.112 tin validation. Tuần ISO cuối trong bản dữ liệu mới chỉ có ngày 30/03/2026, gồm 371 tin, đều thuộc nguồn Hugging Face. Toàn bộ tệp gồm 107.631 tin Hugging Face, 804 tin Kaggle và 273 tin GitHub/Alonhadat.
+
+\subsection{Mô hình tham chiếu và Boosting}
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Mô hình & CV RMSE log & Test RMSE log & Test MAPE (\%)\\
+\midrule
+Trung bình log giá & --- & 0,28283 & 21,43\\
+XGBoost cấu hình cố định & 0,27638 & 0,25059 & 18,89\\
+LightGBM cấu hình cố định & 0,27246 & 0,25091 & 18,92\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Ba phương pháp tìm siêu tham số}
+\begin{center}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Phương pháp & CV RMSE log & Test RMSE log & Test MAPE (\%) & Giây\\
+\midrule
+Grid & $0{,}26970 \pm 0{,}00040$ & 0,25611 & 19,43 & 14,50\\
+Random & $0{,}26991 \pm 0{,}00051$ & 0,25791 & 19,58 & 14,10\\
+Optuna TPE & $0{,}26970 \pm 0{,}00040$ & 0,25611 & 19,43 & 16,68\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Grid và TPE tìm được cùng cấu hình tốt nhất ở từng seed. Script ghi Grid là phương pháp được chọn vì được xét trước khi CV hòa. Chênh lệch giữa các phương pháp nhỏ so với độ dao động giữa các seed. Thời gian là trung bình mỗi lượt tìm kiếm trên máy chạy thí nghiệm, chỉ tính tìm kiếm và không gồm tiền xử lý hay huấn luyện lại.
+
+Tối ưu theo các khối không gian cải thiện điểm CV so với XGBoost cấu hình cố định, trong khi các mô hình cấu hình cố định có điểm test thấp hơn trên ngày cuối. Hai phép đo khảo sát hai cách chuyển miền khác nhau. Tập test chỉ kéo dài một ngày và đến từ một nguồn, vì vậy kết quả này chưa đủ để kết luận về hiệu quả dài hạn của tối ưu siêu tham số.

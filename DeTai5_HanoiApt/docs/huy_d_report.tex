@@ -1,0 +1,77 @@
+% Compile with XeLaTeX from this directory.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\usepackage{amsmath,booktabs}
+\usepackage[hidelinks]{hyperref}
+\title{Đề tài 5: Boosting cho giá rao bán căn hộ Hà Nội}
+\author{Huy -- Phần D.1, D.3 và D.4}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{D.1. Nguồn và quá trình xử lý dữ liệu}
+Đơn vị quan sát là một tin rao bán căn hộ. Biến mục tiêu là log tự nhiên của giá rao trên mỗi mét vuông, tính theo triệu đồng.
+Notebook \texttt{01\_data\_audit\_and\_clean.ipynb} hợp nhất ba nguồn và chuẩn hóa giá, diện tích, số phòng, pháp lý, nội thất và thời điểm đăng.
+\begin{itemize}
+  \item \href{https://www.kaggle.com/datasets/huytrngquc/hanoi-housing-price-2024}{Kaggle Hanoi Housing Price 2024}: dùng loại tin và tiêu đề để lọc ứng viên căn hộ.
+  \item \href{https://github.com/hsgsstudent/hanoi_real_estate_prediction}{GitHub Hanoi Real Estate Prediction}: bản thu thập Alonhadat, lấy ngày từ ngày bắt đầu đăng và địa bàn từ địa chỉ.
+  \item \href{https://huggingface.co/datasets/tinixai/vietnam-real-estates}{Hugging Face Vietnam Real Estates}: chọn Hà Nội và loại căn hộ chung cư, quy đổi giá theo diện tích và lấy ngày công bố.
+\end{itemize}
+Đầu ra D.1 có 189.293 tin. Tệp \texttt{data/hanoi\_apt\_final.csv} do nhánh D.2 bàn giao có 108.708 tin và 21 cột. Hai tên \texttt{final} và \texttt{enriched} trỏ tới nội dung giống nhau trong phiên bản repo được dùng. Script \texttt{src/d\_enrich.py} mô tả các bước lọc, khử trùng, ánh xạ phường/xã và tính khoảng cách.
+
+\section{D.3. Huấn luyện nhánh Boosting}
+Mốc tham chiếu là trung bình log giá trên tập huấn luyện. Hai mô hình Boosting là XGBoost và LightGBM, dùng cùng 11 biến đầu vào: diện tích, phòng ngủ, phòng tắm, cờ pháp lý, mức nội thất, vĩ độ, kinh độ và bốn khoảng cách tới trung tâm, metro, trường học và công viên. Các cột mô tả, giá, nguồn và thời gian không đưa vào mô hình. Giá trị số thiếu được xử lý qua cơ chế mặc định của thư viện cây.
+
+XGBoost dùng mục tiêu bình phương sai số và xây cây theo biểu đồ tần suất. LightGBM dùng hồi quy bình phương sai số và tối đa 31 lá. Số vòng tối đa là 120. Với từng fold, dừng sớm khi RMSE validation không cải thiện trong 12 vòng. Khi huấn luyện lại trên toàn bộ dữ liệu trước test, số vòng lấy trung vị của ba điểm dừng.
+
+\section{D.4. Thiết kế so sánh tìm siêu tham số}
+Ba phương pháp cùng tối ưu XGBoost, dùng cùng dữ liệu, cùng ba fold, cùng không gian 12 tổ hợp và 12 lượt đánh giá cho mỗi seed. Năm seed là 42, 43, 44, 45 và 46, áp dụng cho lấy mẫu trong XGBoost và cho bộ tìm kiếm ngẫu nhiên hoặc TPE.
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Siêu tham số & Tập giá trị\\
+\midrule
+Độ sâu tối đa & 3, 6\\
+Tốc độ học & 0,05; 0,10; 0,20\\
+Tổng trọng số Hessian tối thiểu ở nút con & 3, 12\\
+\bottomrule
+\end{tabular}
+\end{center}
+Grid duyệt cả 12 tổ hợp. Random lấy mẫu đều có hoàn lại. TPE dùng bốn lượt khởi tạo, rồi đề xuất cấu hình dựa trên kết quả đã quan sát. Random và TPE có thể đánh giá trùng cấu hình. Grid có lợi thế bao phủ toàn bộ không gian trong ngân sách này, nên kết quả chỉ áp dụng cho thiết kế nêu trên.
+
+Tập test giữ tuần ISO cuối cùng tính từ ngày mới nhất có trong dữ liệu. Các fold được tạo trên phần thời gian trước đó bằng \texttt{GroupKFold}. Với tin có nhãn phường/xã, khối được xác định theo nhãn này. Các tin thiếu nhãn được gom theo quận ghi trong dữ liệu. Tập test không tham gia huấn luyện, dừng sớm hoặc chọn phương pháp trong script của Huy.
+
+Với $z_i=\log(p_i)$ và $\hat z_i$ là dự báo, hai chỉ số là
+\begin{align*}
+\mathrm{RMSE}_{\log} &= \sqrt{\frac{1}{n}\sum_i(\hat z_i-z_i)^2},\\
+\mathrm{MAPE}_{\mathrm{giá}} &= \frac{100}{n}\sum_i|\exp(\hat z_i-z_i)-1|.
+\end{align*}
+Điểm chọn cấu hình là trung bình RMSE của ba fold. Bảng kết quả ghi trung bình và độ lệch chuẩn mẫu qua năm seed. Điểm test được báo riêng.
+
+\input{huy_d_metrics.tex}
+
+\section{Datasheet}
+\textbf{Phạm vi và nguồn gốc.} Ba bộ dữ liệu tin rao công khai được kết hợp thành D.1, sau đó làm giàu vị trí bằng công cụ D.2. Dữ liệu chưa cung cấp giá giao dịch đã chốt, mã căn hộ ổn định hoặc thông tin hữu dụng để kiểm chứng mọi nhãn vị trí. Cờ pháp lý dựa trên quy tắc của từng nguồn. Notebook D.1 mặc định cờ pháp lý bằng 1 cho nguồn Hugging Face, nên ý nghĩa của cờ thay đổi theo nguồn.
+
+\textbf{Độ phủ GIS.} Chỉ 1.041 tin có trường phường/xã và chỉ có 50 cặp tọa độ khác nhau trong cả tập. Hai tin thiếu tọa độ. D.2 dự phòng bằng tọa độ trung tâm quận và dùng các danh sách tiện ích trong mã. Khoảng cách là đường chim bay theo Haversine. Nhiều tin dùng chung tọa độ xấp xỉ, nên không thể suy ra vị trí chi tiết theo căn hộ.
+
+\textbf{Giới hạn đánh giá.} D.2 đã lọc phân vị giá, khử trùng và điền một số trường trên dữ liệu tổng trước khi tách thời gian. Điểm đo phản ánh các tin còn lại trong bản đã xử lý. Ước lượng trên luồng tin mới cần thực hiện chia tách trước khi học bất kỳ ngưỡng hoặc thống kê tiền xử lý nào. Một nhãn phường/xã và khối quận dự phòng có thể nằm trong cùng vùng địa lý. CV có độ phân giải chủ yếu cấp quận. Dùng lại các fold để chọn tham số có thể làm điểm CV của cấu hình thắng lạc quan.
+
+\section{Model Card}
+\textbf{Mục đích.} Dự đoán giá rao trên mỗi mét vuông trong phạm vi dữ liệu căn hộ Hà Nội để so sánh các mô hình học máy. Đầu ra trên thang log được chuyển về triệu đồng trên mét vuông bằng hàm mũ.
+
+\textbf{Lựa chọn và vận hành.} Phương pháp chọn theo RMSE validation trung bình, không dựa vào điểm test. Các cấu hình từng seed, số vòng, điểm từng fold và phiên bản thư viện nằm trong \texttt{artifacts/tables/huy\_d\_results.json}. Để tái lập, chạy \texttt{python -B notebooks/run\_huy\_d.py} từ thư mục dự án.
+
+\textbf{Giới hạn sử dụng.} Giá rao chịu ảnh hưởng của nguồn đăng, thời điểm đăng và lựa chọn của người bán. Kết quả có thể kém ổn định ở vùng thiếu dữ liệu, căn đặc biệt, giá nằm ngoài khoảng lọc hoặc ở giai đoạn thị trường khác. Chưa có kiểm định với giá giao dịch hoặc phân nhóm công bằng. Kết quả phù hợp cho phân tích học thuật và chưa được thẩm định cho quyết định tín dụng hoặc định giá giao dịch.
+
+\section*{Tài liệu tham khảo}
+\begin{itemize}
+  \item Chen và Guestrin (2016), \href{https://arxiv.org/abs/1603.02754}{XGBoost: A Scalable Tree Boosting System}.
+  \item Ke và cộng sự (2017), \href{https://papers.nips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html}{LightGBM: A Highly Efficient Gradient Boosting Decision Tree}.
+  \item Bergstra và Bengio (2012), \href{https://www.jmlr.org/papers/v13/bergstra12a.html}{Random Search for Hyper-Parameter Optimization}.
+  \item Akiba và cộng sự (2019), \href{https://arxiv.org/abs/1907.10902}{Optuna: A Next-generation Hyperparameter Optimization Framework}.
+\end{itemize}
+\end{document}

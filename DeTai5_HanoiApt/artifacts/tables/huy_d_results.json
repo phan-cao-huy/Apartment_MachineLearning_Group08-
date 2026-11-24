@@ -1,0 +1,4003 @@
+{
+  "dataset": "hanoi_apt_final.csv",
+  "audit": {
+    "sha256": "a32703ffd22a15abef27e439f7b967add22cdf515bfdb3172f5e7b5938644188",
+    "rows": 108708,
+    "train_rows": 108337,
+    "test_rows": 371,
+    "test_dates": [
+      "2026-03-30",
+      "2026-03-30"
+    ],
+    "rows_without_ward": 107667,
+    "test_sources": {
+      "huggingface_vietnam_real_estates": 371
+    },
+    "sources": {
+      "huggingface_vietnam_real_estates": 107631,
+      "kaggle_batdongsan_2024": 804,
+      "github_alonhadat_2025": 273
+    },
+    "training_blocks": 153,
+    "fold_validation_rows": [
+      36113,
+      36112,
+      36112
+    ]
+  },
+  "features": [
+    "area_m2",
+    "bedrooms",
+    "bathrooms",
+    "has_red_book",
+    "interior_level",
+    "lat",
+    "lon",
+    "dist_center_km",
+    "dist_metro_km",
+    "dist_school_km",
+    "dist_park_km"
+  ],
+  "space": {
+    "max_depth": [
+      3,
+      6
+    ],
+    "learning_rate": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "min_child_weight": [
+      3,
+      12
+    ]
+  },
+  "trials_per_method_seed": 12,
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "max_rounds": 120,
+  "patience": 12,
+  "baseline": {
+    "mean_log_price": {
+      "rmse_log": 0.28283389851354335,
+      "mape_price_pct": 21.42586903665486
+    },
+    "xgboost": {
+      "params": {
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "min_child_weight": 3
+      },
+      "cv_rmse_log": 0.27638393609228107,
+      "fold_rmse_log": [
+        0.2729118935203214,
+        0.29581186641111223,
+        0.2604280483454095
+      ],
+      "fold_rounds": [
+        2,
+        16,
+        11
+      ],
+      "rounds": 11,
+      "rmse_log": 0.2505921850635578,
+      "mape_price_pct": 18.885543540217526
+    },
+    "lightgbm": {
+      "cv_rmse_log": 0.27246052420296113,
+      "rounds": 12,
+      "rmse_log": 0.25090682066725817,
+      "mape_price_pct": 18.92070817038643
+    }
+  },
+  "search_summary": {
+    "grid": {
+      "mean_cv_rmse_log": 0.26970215038311557,
+      "sd_cv_rmse_log": 0.00039577105597374696,
+      "mean_search_seconds": 14.708781679999083,
+      "mean_test_rmse_log": 0.25611175160749433,
+      "mean_test_mape_price_pct": 19.434866912270586
+    },
+    "random": {
+      "mean_cv_rmse_log": 0.26990807504082154,
+      "sd_cv_rmse_log": 0.0005067280641654728,
+      "mean_search_seconds": 14.180573880020528,
+      "mean_test_rmse_log": 0.25791299440184695,
+      "mean_test_mape_price_pct": 19.57649827508989
+    },
+    "tpe": {
+      "mean_cv_rmse_log": 0.26970215038311557,
+      "sd_cv_rmse_log": 0.00039577105597374696,
+      "mean_search_seconds": 14.341920199978631,
+      "mean_test_rmse_log": 0.25611175160749433,
+      "mean_test_mape_price_pct": 19.434866912270586
+    }
+  },
+  "method_selected_by_cv": "grid",
+  "runs": [
+    {
+      "seed": 42,
+      "method": "grid",
+      "seconds": 9.936603899986949,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.26995860187795245,
+        "fold_rmse_log": [
+          0.2665386516769948,
+          0.284051676996783,
+          0.25928547696007936
+        ],
+        "fold_rounds": [
+          2,
+          21,
+          7
+        ],
+        "rounds": 7
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2704489717429583,
+          "fold_rmse_log": [
+            0.2667703444949458,
+            0.28241287541903687,
+            0.2621636953148922
+          ],
+          "fold_rounds": [
+            8,
+            105,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2703423141648968,
+          "fold_rmse_log": [
+            0.2667703444949458,
+            0.2820929026848524,
+            0.2621636953148922
+          ],
+          "fold_rounds": [
+            8,
+            108,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2706458150446212,
+          "fold_rmse_log": [
+            0.26648418286251707,
+            0.28277642331322567,
+            0.2626768389581209
+          ],
+          "fold_rounds": [
+            4,
+            49,
+            14
+          ],
+          "rounds": 14
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2707072594733804,
+          "fold_rmse_log": [
+            0.26648418286251707,
+            0.2829607565995033,
+            0.2626768389581209
+          ],
+          "fold_rounds": [
+            4,
+            45,
+            14
+          ],
+          "rounds": 14
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26995860187795245,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.284051676996783,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            21,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2699735740788256,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.2840965935994026,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            19,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27479340694488624,
+          "fold_rmse_log": [
+            0.2722050439061878,
+            0.2928641976436782,
+            0.2593109792847926
+          ],
+          "fold_rounds": [
+            4,
+            39,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27524559576909696,
+          "fold_rmse_log": [
+            0.27224640269678485,
+            0.29359481619407746,
+            0.25989556841642847
+          ],
+          "fold_rounds": [
+            4,
+            39,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27638393609228107,
+          "fold_rmse_log": [
+            0.2729118935203214,
+            0.29581186641111223,
+            0.2604280483454095
+          ],
+          "fold_rounds": [
+            2,
+            16,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2763684668914659,
+          "fold_rmse_log": [
+            0.2729381017741032,
+            0.2954249454495624,
+            0.2607423534507321
+          ],
+          "fold_rounds": [
+            2,
+            14,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27672440644863167,
+          "fold_rmse_log": [
+            0.27505297356865055,
+            0.2948797574019917,
+            0.2602404883752529
+          ],
+          "fold_rounds": [
+            1,
+            11,
+            8
+          ],
+          "rounds": 8
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27644724881446336,
+          "fold_rmse_log": [
+            0.27502968373521197,
+            0.2936163648127251,
+            0.26069569789545305
+          ],
+          "fold_rounds": [
+            1,
+            12,
+            9
+          ],
+          "rounds": 9
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25941299798780076,
+        "mape_price_pct": 19.67126535274376
+      }
+    },
+    {
+      "seed": 42,
+      "method": "random",
+      "seconds": 12.29228629998397,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 12
+        },
+        "cv_rmse_log": 0.2699735740788256,
+        "fold_rmse_log": [
+          0.2665386516769948,
+          0.2840965935994026,
+          0.25928547696007936
+        ],
+        "fold_rounds": [
+          2,
+          19,
+          7
+        ],
+        "rounds": 7
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2703423141648968,
+          "fold_rmse_log": [
+            0.2667703444949458,
+            0.2820929026848524,
+            0.2621636953148922
+          ],
+          "fold_rounds": [
+            8,
+            108,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2763684668914659,
+          "fold_rmse_log": [
+            0.2729381017741032,
+            0.2954249454495624,
+            0.2607423534507321
+          ],
+          "fold_rounds": [
+            2,
+            14,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27524559576909696,
+          "fold_rmse_log": [
+            0.27224640269678485,
+            0.29359481619407746,
+            0.25989556841642847
+          ],
+          "fold_rounds": [
+            4,
+            39,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2699735740788256,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.2840965935994026,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            19,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2699735740788256,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.2840965935994026,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            19,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27672440644863167,
+          "fold_rmse_log": [
+            0.27505297356865055,
+            0.2948797574019917,
+            0.2602404883752529
+          ],
+          "fold_rounds": [
+            1,
+            11,
+            8
+          ],
+          "rounds": 8
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2703423141648968,
+          "fold_rmse_log": [
+            0.2667703444949458,
+            0.2820929026848524,
+            0.2621636953148922
+          ],
+          "fold_rounds": [
+            8,
+            108,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27638393609228107,
+          "fold_rmse_log": [
+            0.2729118935203214,
+            0.29581186641111223,
+            0.2604280483454095
+          ],
+          "fold_rounds": [
+            2,
+            16,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2706458150446212,
+          "fold_rmse_log": [
+            0.26648418286251707,
+            0.28277642331322567,
+            0.2626768389581209
+          ],
+          "fold_rounds": [
+            4,
+            49,
+            14
+          ],
+          "rounds": 14
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2703423141648968,
+          "fold_rmse_log": [
+            0.2667703444949458,
+            0.2820929026848524,
+            0.2621636953148922
+          ],
+          "fold_rounds": [
+            8,
+            108,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27479340694488624,
+          "fold_rmse_log": [
+            0.2722050439061878,
+            0.2928641976436782,
+            0.2593109792847926
+          ],
+          "fold_rounds": [
+            4,
+            39,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27644724881446336,
+          "fold_rmse_log": [
+            0.27502968373521197,
+            0.2936163648127251,
+            0.26069569789545305
+          ],
+          "fold_rounds": [
+            1,
+            12,
+            9
+          ],
+          "rounds": 9
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25941299798780076,
+        "mape_price_pct": 19.67126535274376
+      }
+    },
+    {
+      "seed": 42,
+      "method": "tpe",
+      "seconds": 10.086180899990723,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.26995860187795245,
+        "fold_rmse_log": [
+          0.2665386516769948,
+          0.284051676996783,
+          0.25928547696007936
+        ],
+        "fold_rounds": [
+          2,
+          21,
+          7
+        ],
+        "rounds": 7
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27479340694488624,
+          "fold_rmse_log": [
+            0.2722050439061878,
+            0.2928641976436782,
+            0.2593109792847926
+          ],
+          "fold_rounds": [
+            4,
+            39,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26995860187795245,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.284051676996783,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            21,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2763684668914659,
+          "fold_rmse_log": [
+            0.2729381017741032,
+            0.2954249454495624,
+            0.2607423534507321
+          ],
+          "fold_rounds": [
+            2,
+            14,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27644724881446336,
+          "fold_rmse_log": [
+            0.27502968373521197,
+            0.2936163648127251,
+            0.26069569789545305
+          ],
+          "fold_rounds": [
+            1,
+            12,
+            9
+          ],
+          "rounds": 9
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26995860187795245,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.284051676996783,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            21,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2706458150446212,
+          "fold_rmse_log": [
+            0.26648418286251707,
+            0.28277642331322567,
+            0.2626768389581209
+          ],
+          "fold_rounds": [
+            4,
+            49,
+            14
+          ],
+          "rounds": 14
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2703423141648968,
+          "fold_rmse_log": [
+            0.2667703444949458,
+            0.2820929026848524,
+            0.2621636953148922
+          ],
+          "fold_rounds": [
+            8,
+            108,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26995860187795245,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.284051676996783,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            21,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27672440644863167,
+          "fold_rmse_log": [
+            0.27505297356865055,
+            0.2948797574019917,
+            0.2602404883752529
+          ],
+          "fold_rounds": [
+            1,
+            11,
+            8
+          ],
+          "rounds": 8
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2699735740788256,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.2840965935994026,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            19,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2704489717429583,
+          "fold_rmse_log": [
+            0.2667703444949458,
+            0.28241287541903687,
+            0.2621636953148922
+          ],
+          "fold_rounds": [
+            8,
+            105,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26995860187795245,
+          "fold_rmse_log": [
+            0.2665386516769948,
+            0.284051676996783,
+            0.25928547696007936
+          ],
+          "fold_rounds": [
+            2,
+            21,
+            7
+          ],
+          "rounds": 7
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25941299798780076,
+        "mape_price_pct": 19.67126535274376
+      }
+    },
+    {
+      "seed": 43,
+      "method": "grid",
+      "seconds": 13.135675400029868,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.27012026846822945,
+        "fold_rmse_log": [
+          0.26737571541988225,
+          0.28123590129103765,
+          0.2617491886937685
+        ],
+        "fold_rounds": [
+          9,
+          81,
+          62
+        ],
+        "rounds": 62
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27012026846822945,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28123590129103765,
+            0.2617491886937685
+          ],
+          "fold_rounds": [
+            9,
+            81,
+            62
+          ],
+          "rounds": 62
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27051272802867504,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28097507952924283,
+            0.2631873891369001
+          ],
+          "fold_rounds": [
+            9,
+            104,
+            54
+          ],
+          "rounds": 54
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27259714278727915,
+          "fold_rmse_log": [
+            0.2687095291144677,
+            0.28432898147214186,
+            0.26475291777522797
+          ],
+          "fold_rounds": [
+            7,
+            56,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27256588960220157,
+          "fold_rmse_log": [
+            0.2687095291144677,
+            0.2842352219169091,
+            0.26475291777522797
+          ],
+          "fold_rounds": [
+            7,
+            47,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2741455106386734,
+          "fold_rmse_log": [
+            0.2702641415828206,
+            0.28421470045327674,
+            0.2679576898799227
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2741523484762413,
+          "fold_rmse_log": [
+            0.2702641415828206,
+            0.2842352139659805,
+            0.2679576898799227
+          ],
+          "fold_rounds": [
+            2,
+            28,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27569403090740185,
+          "fold_rmse_log": [
+            0.2731700387941104,
+            0.2904220686806983,
+            0.2634899852473968
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27578582145342617,
+          "fold_rmse_log": [
+            0.2730252983629384,
+            0.2912270953561987,
+            0.2631050706411415
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27617390033321404,
+          "fold_rmse_log": [
+            0.2749084206690198,
+            0.29130719540308125,
+            0.26230608492754104
+          ],
+          "fold_rounds": [
+            2,
+            21,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27525610998035677,
+          "fold_rmse_log": [
+            0.27472850086175926,
+            0.29051744685419145,
+            0.26052238222511953
+          ],
+          "fold_rounds": [
+            2,
+            18,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27734168486799493,
+          "fold_rmse_log": [
+            0.27659355115204765,
+            0.2934481541195948,
+            0.26198334933234235
+          ],
+          "fold_rounds": [
+            1,
+            6,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2755519917053496,
+          "fold_rmse_log": [
+            0.2764600768462605,
+            0.2902926350944775,
+            0.25990326317531076
+          ],
+          "fold_rounds": [
+            1,
+            10,
+            6
+          ],
+          "rounds": 6
+        }
+      ],
+      "test": {
+        "rmse_log": 0.2552835109057219,
+        "mape_price_pct": 19.379368189780017
+      }
+    },
+    {
+      "seed": 43,
+      "method": "random",
+      "seconds": 13.736043600016274,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.27012026846822945,
+        "fold_rmse_log": [
+          0.26737571541988225,
+          0.28123590129103765,
+          0.2617491886937685
+        ],
+        "fold_rounds": [
+          9,
+          81,
+          62
+        ],
+        "rounds": 62
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27569403090740185,
+          "fold_rmse_log": [
+            0.2731700387941104,
+            0.2904220686806983,
+            0.2634899852473968
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27578582145342617,
+          "fold_rmse_log": [
+            0.2730252983629384,
+            0.2912270953561987,
+            0.2631050706411415
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2741455106386734,
+          "fold_rmse_log": [
+            0.2702641415828206,
+            0.28421470045327674,
+            0.2679576898799227
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27012026846822945,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28123590129103765,
+            0.2617491886937685
+          ],
+          "fold_rounds": [
+            9,
+            81,
+            62
+          ],
+          "rounds": 62
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27569403090740185,
+          "fold_rmse_log": [
+            0.2731700387941104,
+            0.2904220686806983,
+            0.2634899852473968
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27012026846822945,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28123590129103765,
+            0.2617491886937685
+          ],
+          "fold_rounds": [
+            9,
+            81,
+            62
+          ],
+          "rounds": 62
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27256588960220157,
+          "fold_rmse_log": [
+            0.2687095291144677,
+            0.2842352219169091,
+            0.26475291777522797
+          ],
+          "fold_rounds": [
+            7,
+            47,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27734168486799493,
+          "fold_rmse_log": [
+            0.27659355115204765,
+            0.2934481541195948,
+            0.26198334933234235
+          ],
+          "fold_rounds": [
+            1,
+            6,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2741523484762413,
+          "fold_rmse_log": [
+            0.2702641415828206,
+            0.2842352139659805,
+            0.2679576898799227
+          ],
+          "fold_rounds": [
+            2,
+            28,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27578582145342617,
+          "fold_rmse_log": [
+            0.2730252983629384,
+            0.2912270953561987,
+            0.2631050706411415
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2755519917053496,
+          "fold_rmse_log": [
+            0.2764600768462605,
+            0.2902926350944775,
+            0.25990326317531076
+          ],
+          "fold_rounds": [
+            1,
+            10,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27259714278727915,
+          "fold_rmse_log": [
+            0.2687095291144677,
+            0.28432898147214186,
+            0.26475291777522797
+          ],
+          "fold_rounds": [
+            7,
+            56,
+            13
+          ],
+          "rounds": 13
+        }
+      ],
+      "test": {
+        "rmse_log": 0.2552835109057219,
+        "mape_price_pct": 19.379368189780017
+      }
+    },
+    {
+      "seed": 43,
+      "method": "tpe",
+      "seconds": 17.827510199975222,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.27012026846822945,
+        "fold_rmse_log": [
+          0.26737571541988225,
+          0.28123590129103765,
+          0.2617491886937685
+        ],
+        "fold_rounds": [
+          9,
+          81,
+          62
+        ],
+        "rounds": 62
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27734168486799493,
+          "fold_rmse_log": [
+            0.27659355115204765,
+            0.2934481541195948,
+            0.26198334933234235
+          ],
+          "fold_rounds": [
+            1,
+            6,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2741455106386734,
+          "fold_rmse_log": [
+            0.2702641415828206,
+            0.28421470045327674,
+            0.2679576898799227
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27051272802867504,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28097507952924283,
+            0.2631873891369001
+          ],
+          "fold_rounds": [
+            9,
+            104,
+            54
+          ],
+          "rounds": 54
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27051272802867504,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28097507952924283,
+            0.2631873891369001
+          ],
+          "fold_rounds": [
+            9,
+            104,
+            54
+          ],
+          "rounds": 54
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27525610998035677,
+          "fold_rmse_log": [
+            0.27472850086175926,
+            0.29051744685419145,
+            0.26052238222511953
+          ],
+          "fold_rounds": [
+            2,
+            18,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27256588960220157,
+          "fold_rmse_log": [
+            0.2687095291144677,
+            0.2842352219169091,
+            0.26475291777522797
+          ],
+          "fold_rounds": [
+            7,
+            47,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27578582145342617,
+          "fold_rmse_log": [
+            0.2730252983629384,
+            0.2912270953561987,
+            0.2631050706411415
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27012026846822945,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28123590129103765,
+            0.2617491886937685
+          ],
+          "fold_rounds": [
+            9,
+            81,
+            62
+          ],
+          "rounds": 62
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27012026846822945,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28123590129103765,
+            0.2617491886937685
+          ],
+          "fold_rounds": [
+            9,
+            81,
+            62
+          ],
+          "rounds": 62
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27259714278727915,
+          "fold_rmse_log": [
+            0.2687095291144677,
+            0.28432898147214186,
+            0.26475291777522797
+          ],
+          "fold_rounds": [
+            7,
+            56,
+            13
+          ],
+          "rounds": 13
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27569403090740185,
+          "fold_rmse_log": [
+            0.2731700387941104,
+            0.2904220686806983,
+            0.2634899852473968
+          ],
+          "fold_rounds": [
+            4,
+            31,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27012026846822945,
+          "fold_rmse_log": [
+            0.26737571541988225,
+            0.28123590129103765,
+            0.2617491886937685
+          ],
+          "fold_rounds": [
+            9,
+            81,
+            62
+          ],
+          "rounds": 62
+        }
+      ],
+      "test": {
+        "rmse_log": 0.2552835109057219,
+        "mape_price_pct": 19.379368189780017
+      }
+    },
+    {
+      "seed": 44,
+      "method": "grid",
+      "seconds": 14.619537899969146,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 12
+        },
+        "cv_rmse_log": 0.2690846349914559,
+        "fold_rmse_log": [
+          0.2666786456246924,
+          0.2823656332773052,
+          0.2582096260723701
+        ],
+        "fold_rounds": [
+          2,
+          25,
+          5
+        ],
+        "rounds": 5
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26984899372839705,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2829188240074392,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            88,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2697731288107556,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2826912292545147,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            104,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2705677732581128,
+          "fold_rmse_log": [
+            0.26592021648509456,
+            0.2825019398384926,
+            0.26328116345075137
+          ],
+          "fold_rounds": [
+            4,
+            47,
+            20
+          ],
+          "rounds": 20
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2702730131554757,
+          "fold_rmse_log": [
+            0.26592021648509456,
+            0.2816176595305812,
+            0.26328116345075137
+          ],
+          "fold_rounds": [
+            4,
+            47,
+            20
+          ],
+          "rounds": 20
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26909265020216977,
+          "fold_rmse_log": [
+            0.2666786456246924,
+            0.2823896789094469,
+            0.2582096260723701
+          ],
+          "fold_rounds": [
+            2,
+            28,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2690846349914559,
+          "fold_rmse_log": [
+            0.2666786456246924,
+            0.2823656332773052,
+            0.2582096260723701
+          ],
+          "fold_rounds": [
+            2,
+            25,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2739897648515953,
+          "fold_rmse_log": [
+            0.273485085515844,
+            0.2894311812236753,
+            0.2590530278152666
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27464824976897506,
+          "fold_rmse_log": [
+            0.27346005026133624,
+            0.28963824067657296,
+            0.26084645836901593
+          ],
+          "fold_rounds": [
+            2,
+            34,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2742885516746723,
+          "fold_rmse_log": [
+            0.2739128950609344,
+            0.28801332742633634,
+            0.26093943253674623
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27447595567453653,
+          "fold_rmse_log": [
+            0.27368721956345243,
+            0.28874851318258277,
+            0.2609921342775744
+          ],
+          "fold_rounds": [
+            2,
+            16,
+            10
+          ],
+          "rounds": 10
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2746961741827381,
+          "fold_rmse_log": [
+            0.2752588146776999,
+            0.2896141723017406,
+            0.25921553556877386
+          ],
+          "fold_rounds": [
+            1,
+            7,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2745659662857464,
+          "fold_rmse_log": [
+            0.2753868779719515,
+            0.28952769967576997,
+            0.2587833212095178
+          ],
+          "fold_rounds": [
+            1,
+            7,
+            5
+          ],
+          "rounds": 5
+        }
+      ],
+      "test": {
+        "rmse_log": 0.26152980844885654,
+        "mape_price_pct": 19.832396859382698
+      }
+    },
+    {
+      "seed": 44,
+      "method": "random",
+      "seconds": 13.631733000045642,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.26909265020216977,
+        "fold_rmse_log": [
+          0.2666786456246924,
+          0.2823896789094469,
+          0.2582096260723701
+        ],
+        "fold_rounds": [
+          2,
+          28,
+          5
+        ],
+        "rounds": 5
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2742885516746723,
+          "fold_rmse_log": [
+            0.2739128950609344,
+            0.28801332742633634,
+            0.26093943253674623
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2697731288107556,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2826912292545147,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            104,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27447595567453653,
+          "fold_rmse_log": [
+            0.27368721956345243,
+            0.28874851318258277,
+            0.2609921342775744
+          ],
+          "fold_rounds": [
+            2,
+            16,
+            10
+          ],
+          "rounds": 10
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2702730131554757,
+          "fold_rmse_log": [
+            0.26592021648509456,
+            0.2816176595305812,
+            0.26328116345075137
+          ],
+          "fold_rounds": [
+            4,
+            47,
+            20
+          ],
+          "rounds": 20
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27464824976897506,
+          "fold_rmse_log": [
+            0.27346005026133624,
+            0.28963824067657296,
+            0.26084645836901593
+          ],
+          "fold_rounds": [
+            2,
+            34,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26909265020216977,
+          "fold_rmse_log": [
+            0.2666786456246924,
+            0.2823896789094469,
+            0.2582096260723701
+          ],
+          "fold_rounds": [
+            2,
+            28,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2697731288107556,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2826912292545147,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            104,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2745659662857464,
+          "fold_rmse_log": [
+            0.2753868779719515,
+            0.28952769967576997,
+            0.2587833212095178
+          ],
+          "fold_rounds": [
+            1,
+            7,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2739897648515953,
+          "fold_rmse_log": [
+            0.273485085515844,
+            0.2894311812236753,
+            0.2590530278152666
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2697731288107556,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2826912292545147,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            104,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2745659662857464,
+          "fold_rmse_log": [
+            0.2753868779719515,
+            0.28952769967576997,
+            0.2587833212095178
+          ],
+          "fold_rounds": [
+            1,
+            7,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2746961741827381,
+          "fold_rmse_log": [
+            0.2752588146776999,
+            0.2896141723017406,
+            0.25921553556877386
+          ],
+          "fold_rounds": [
+            1,
+            7,
+            5
+          ],
+          "rounds": 5
+        }
+      ],
+      "test": {
+        "rmse_log": 0.26152980844885654,
+        "mape_price_pct": 19.832396859382698
+      }
+    },
+    {
+      "seed": 44,
+      "method": "tpe",
+      "seconds": 13.802190099959262,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 12
+        },
+        "cv_rmse_log": 0.2690846349914559,
+        "fold_rmse_log": [
+          0.2666786456246924,
+          0.2823656332773052,
+          0.2582096260723701
+        ],
+        "fold_rounds": [
+          2,
+          25,
+          5
+        ],
+        "rounds": 5
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26984899372839705,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2829188240074392,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            88,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2742885516746723,
+          "fold_rmse_log": [
+            0.2739128950609344,
+            0.28801332742633634,
+            0.26093943253674623
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            11
+          ],
+          "rounds": 11
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27464824976897506,
+          "fold_rmse_log": [
+            0.27346005026133624,
+            0.28963824067657296,
+            0.26084645836901593
+          ],
+          "fold_rounds": [
+            2,
+            34,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2739897648515953,
+          "fold_rmse_log": [
+            0.273485085515844,
+            0.2894311812236753,
+            0.2590530278152666
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26984899372839705,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2829188240074392,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            88,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2690846349914559,
+          "fold_rmse_log": [
+            0.2666786456246924,
+            0.2823656332773052,
+            0.2582096260723701
+          ],
+          "fold_rounds": [
+            2,
+            25,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2690846349914559,
+          "fold_rmse_log": [
+            0.2666786456246924,
+            0.2823656332773052,
+            0.2582096260723701
+          ],
+          "fold_rounds": [
+            2,
+            25,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2702730131554757,
+          "fold_rmse_log": [
+            0.26592021648509456,
+            0.2816176595305812,
+            0.26328116345075137
+          ],
+          "fold_rounds": [
+            4,
+            47,
+            20
+          ],
+          "rounds": 20
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2745659662857464,
+          "fold_rmse_log": [
+            0.2753868779719515,
+            0.28952769967576997,
+            0.2587833212095178
+          ],
+          "fold_rounds": [
+            1,
+            7,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26909265020216977,
+          "fold_rmse_log": [
+            0.2666786456246924,
+            0.2823896789094469,
+            0.2582096260723701
+          ],
+          "fold_rounds": [
+            2,
+            28,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2697731288107556,
+          "fold_rmse_log": [
+            0.2666239709620842,
+            0.2826912292545147,
+            0.26000418621566784
+          ],
+          "fold_rounds": [
+            6,
+            104,
+            31
+          ],
+          "rounds": 31
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2690846349914559,
+          "fold_rmse_log": [
+            0.2666786456246924,
+            0.2823656332773052,
+            0.2582096260723701
+          ],
+          "fold_rounds": [
+            2,
+            25,
+            5
+          ],
+          "rounds": 5
+        }
+      ],
+      "test": {
+        "rmse_log": 0.26152980844885654,
+        "mape_price_pct": 19.832396859382698
+      }
+    },
+    {
+      "seed": 45,
+      "method": "grid",
+      "seconds": 20.431537900003605,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.1,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.26971232705846065,
+        "fold_rmse_log": [
+          0.26796620886403616,
+          0.28272404870579515,
+          0.25844672360555054
+        ],
+        "fold_rounds": [
+          5,
+          61,
+          58
+        ],
+        "rounds": 58
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27010976626798233,
+          "fold_rmse_log": [
+            0.26706140398524547,
+            0.2829756405310669,
+            0.26029225428763464
+          ],
+          "fold_rounds": [
+            7,
+            90,
+            25
+          ],
+          "rounds": 25
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2698687654929172,
+          "fold_rmse_log": [
+            0.26706140398524547,
+            0.28225263820587154,
+            0.26029225428763464
+          ],
+          "fold_rounds": [
+            7,
+            107,
+            25
+          ],
+          "rounds": 25
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26971232705846065,
+          "fold_rmse_log": [
+            0.26796620886403616,
+            0.28272404870579515,
+            0.25844672360555054
+          ],
+          "fold_rounds": [
+            5,
+            61,
+            58
+          ],
+          "rounds": 58
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2698425909244611,
+          "fold_rmse_log": [
+            0.26796620886403616,
+            0.2827344072693414,
+            0.25882715664000566
+          ],
+          "fold_rounds": [
+            5,
+            59,
+            51
+          ],
+          "rounds": 51
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2706675501661502,
+          "fold_rmse_log": [
+            0.26802058633648357,
+            0.28151944394822376,
+            0.2624626202137432
+          ],
+          "fold_rounds": [
+            1,
+            18,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27046701141664714,
+          "fold_rmse_log": [
+            0.26802058633648357,
+            0.2809178276997147,
+            0.2624626202137432
+          ],
+          "fold_rounds": [
+            1,
+            21,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2753398428925547,
+          "fold_rmse_log": [
+            0.2733381760388702,
+            0.2935997247840359,
+            0.259081627854758
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27627377562162175,
+          "fold_rmse_log": [
+            0.2733699695993853,
+            0.29516444327173885,
+            0.260286913993741
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            25
+          ],
+          "rounds": 25
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27448404122814835,
+          "fold_rmse_log": [
+            0.2732292943306599,
+            0.2918867230556612,
+            0.25833610629812387
+          ],
+          "fold_rounds": [
+            1,
+            32,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27670996878288595,
+          "fold_rmse_log": [
+            0.2731327450884929,
+            0.2939932302731065,
+            0.2630039309870584
+          ],
+          "fold_rounds": [
+            1,
+            28,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27619240335978584,
+          "fold_rmse_log": [
+            0.274981878354444,
+            0.29405443850415447,
+            0.2595408932207592
+          ],
+          "fold_rounds": [
+            1,
+            5,
+            5
+          ],
+          "rounds": 5
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2771683360510807,
+          "fold_rmse_log": [
+            0.274730096689353,
+            0.2935835158829953,
+            0.2631913955808939
+          ],
+          "fold_rounds": [
+            1,
+            8,
+            6
+          ],
+          "rounds": 6
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25101463470197255,
+        "mape_price_pct": 19.081577518453702
+      }
+    },
+    {
+      "seed": 45,
+      "method": "random",
+      "seconds": 16.129170000029262,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 12
+        },
+        "cv_rmse_log": 0.27046701141664714,
+        "fold_rmse_log": [
+          0.26802058633648357,
+          0.2809178276997147,
+          0.2624626202137432
+        ],
+        "fold_rounds": [
+          1,
+          21,
+          7
+        ],
+        "rounds": 7
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2771683360510807,
+          "fold_rmse_log": [
+            0.274730096689353,
+            0.2935835158829953,
+            0.2631913955808939
+          ],
+          "fold_rounds": [
+            1,
+            8,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2753398428925547,
+          "fold_rmse_log": [
+            0.2733381760388702,
+            0.2935997247840359,
+            0.259081627854758
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27448404122814835,
+          "fold_rmse_log": [
+            0.2732292943306599,
+            0.2918867230556612,
+            0.25833610629812387
+          ],
+          "fold_rounds": [
+            1,
+            32,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2753398428925547,
+          "fold_rmse_log": [
+            0.2733381760388702,
+            0.2935997247840359,
+            0.259081627854758
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2753398428925547,
+          "fold_rmse_log": [
+            0.2733381760388702,
+            0.2935997247840359,
+            0.259081627854758
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27670996878288595,
+          "fold_rmse_log": [
+            0.2731327450884929,
+            0.2939932302731065,
+            0.2630039309870584
+          ],
+          "fold_rounds": [
+            1,
+            28,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27448404122814835,
+          "fold_rmse_log": [
+            0.2732292943306599,
+            0.2918867230556612,
+            0.25833610629812387
+          ],
+          "fold_rounds": [
+            1,
+            32,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27670996878288595,
+          "fold_rmse_log": [
+            0.2731327450884929,
+            0.2939932302731065,
+            0.2630039309870584
+          ],
+          "fold_rounds": [
+            1,
+            28,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2753398428925547,
+          "fold_rmse_log": [
+            0.2733381760388702,
+            0.2935997247840359,
+            0.259081627854758
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2753398428925547,
+          "fold_rmse_log": [
+            0.2733381760388702,
+            0.2935997247840359,
+            0.259081627854758
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27046701141664714,
+          "fold_rmse_log": [
+            0.26802058633648357,
+            0.2809178276997147,
+            0.2624626202137432
+          ],
+          "fold_rounds": [
+            1,
+            21,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27670996878288595,
+          "fold_rmse_log": [
+            0.2731327450884929,
+            0.2939932302731065,
+            0.2630039309870584
+          ],
+          "fold_rounds": [
+            1,
+            28,
+            15
+          ],
+          "rounds": 15
+        }
+      ],
+      "test": {
+        "rmse_log": 0.2581704259499345,
+        "mape_price_pct": 19.63883848757652
+      }
+    },
+    {
+      "seed": 45,
+      "method": "tpe",
+      "seconds": 16.04195929999696,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.1,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.26971232705846065,
+        "fold_rmse_log": [
+          0.26796620886403616,
+          0.28272404870579515,
+          0.25844672360555054
+        ],
+        "fold_rounds": [
+          5,
+          61,
+          58
+        ],
+        "rounds": 58
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2706675501661502,
+          "fold_rmse_log": [
+            0.26802058633648357,
+            0.28151944394822376,
+            0.2624626202137432
+          ],
+          "fold_rounds": [
+            1,
+            18,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26971232705846065,
+          "fold_rmse_log": [
+            0.26796620886403616,
+            0.28272404870579515,
+            0.25844672360555054
+          ],
+          "fold_rounds": [
+            5,
+            61,
+            58
+          ],
+          "rounds": 58
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2698687654929172,
+          "fold_rmse_log": [
+            0.26706140398524547,
+            0.28225263820587154,
+            0.26029225428763464
+          ],
+          "fold_rounds": [
+            7,
+            107,
+            25
+          ],
+          "rounds": 25
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2753398428925547,
+          "fold_rmse_log": [
+            0.2733381760388702,
+            0.2935997247840359,
+            0.259081627854758
+          ],
+          "fold_rounds": [
+            3,
+            34,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26971232705846065,
+          "fold_rmse_log": [
+            0.26796620886403616,
+            0.28272404870579515,
+            0.25844672360555054
+          ],
+          "fold_rounds": [
+            5,
+            61,
+            58
+          ],
+          "rounds": 58
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27670996878288595,
+          "fold_rmse_log": [
+            0.2731327450884929,
+            0.2939932302731065,
+            0.2630039309870584
+          ],
+          "fold_rounds": [
+            1,
+            28,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27448404122814835,
+          "fold_rmse_log": [
+            0.2732292943306599,
+            0.2918867230556612,
+            0.25833610629812387
+          ],
+          "fold_rounds": [
+            1,
+            32,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2698425909244611,
+          "fold_rmse_log": [
+            0.26796620886403616,
+            0.2827344072693414,
+            0.25882715664000566
+          ],
+          "fold_rounds": [
+            5,
+            59,
+            51
+          ],
+          "rounds": 51
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27010976626798233,
+          "fold_rmse_log": [
+            0.26706140398524547,
+            0.2829756405310669,
+            0.26029225428763464
+          ],
+          "fold_rounds": [
+            7,
+            90,
+            25
+          ],
+          "rounds": 25
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26971232705846065,
+          "fold_rmse_log": [
+            0.26796620886403616,
+            0.28272404870579515,
+            0.25844672360555054
+          ],
+          "fold_rounds": [
+            5,
+            61,
+            58
+          ],
+          "rounds": 58
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27046701141664714,
+          "fold_rmse_log": [
+            0.26802058633648357,
+            0.2809178276997147,
+            0.2624626202137432
+          ],
+          "fold_rounds": [
+            1,
+            21,
+            7
+          ],
+          "rounds": 7
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26971232705846065,
+          "fold_rmse_log": [
+            0.26796620886403616,
+            0.28272404870579515,
+            0.25844672360555054
+          ],
+          "fold_rounds": [
+            5,
+            61,
+            58
+          ],
+          "rounds": 58
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25101463470197255,
+        "mape_price_pct": 19.081577518453702
+      }
+    },
+    {
+      "seed": 46,
+      "method": "grid",
+      "seconds": 15.42055330000585,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.26963491951947943,
+        "fold_rmse_log": [
+          0.2678466179827096,
+          0.28496600915130393,
+          0.2560921314244249
+        ],
+        "fold_rounds": [
+          2,
+          27,
+          52
+        ],
+        "rounds": 27
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2702310983786261,
+          "fold_rmse_log": [
+            0.2671161094109749,
+            0.2823306575757809,
+            0.2612465281491226
+          ],
+          "fold_rounds": [
+            11,
+            112,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2702113566123141,
+          "fold_rmse_log": [
+            0.2671161094109749,
+            0.28227143227684476,
+            0.2612465281491226
+          ],
+          "fold_rounds": [
+            11,
+            117,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2698868710382359,
+          "fold_rmse_log": [
+            0.26686256426121946,
+            0.28281468715184466,
+            0.2599833617016435
+          ],
+          "fold_rounds": [
+            3,
+            56,
+            39
+          ],
+          "rounds": 39
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27026402151721163,
+          "fold_rmse_log": [
+            0.26686256426121946,
+            0.2833943375166333,
+            0.26053516277378225
+          ],
+          "fold_rounds": [
+            3,
+            56,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26963491951947943,
+          "fold_rmse_log": [
+            0.2678466179827096,
+            0.28496600915130393,
+            0.2560921314244249
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            52
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27031768936076905,
+          "fold_rmse_log": [
+            0.2678466179827096,
+            0.2857222779596532,
+            0.2573841721399443
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27411305258851804,
+          "fold_rmse_log": [
+            0.27098150994328046,
+            0.29239906926016596,
+            0.2589585785621077
+          ],
+          "fold_rounds": [
+            5,
+            35,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27406923805151934,
+          "fold_rmse_log": [
+            0.27095107216824044,
+            0.2918314419854891,
+            0.25942520000082864
+          ],
+          "fold_rounds": [
+            5,
+            36,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2743014008475069,
+          "fold_rmse_log": [
+            0.26990831803120713,
+            0.2906517467398591,
+            0.2623441377714545
+          ],
+          "fold_rounds": [
+            2,
+            23,
+            15
+          ],
+          "rounds": 15
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2742335880287233,
+          "fold_rmse_log": [
+            0.2700008534388725,
+            0.29114826611648575,
+            0.26155164453081164
+          ],
+          "fold_rounds": [
+            2,
+            19,
+            16
+          ],
+          "rounds": 16
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2750996932419087,
+          "fold_rmse_log": [
+            0.2721496432192512,
+            0.2918885280033019,
+            0.2612609085031731
+          ],
+          "fold_rounds": [
+            2,
+            9,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27482730881904943,
+          "fold_rmse_log": [
+            0.27209917963756014,
+            0.29132095757915766,
+            0.2610617892404306
+          ],
+          "fold_rounds": [
+            2,
+            8,
+            8
+          ],
+          "rounds": 8
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25331780599312004,
+        "mape_price_pct": 19.20972664099275
+      }
+    },
+    {
+      "seed": 46,
+      "method": "random",
+      "seconds": 15.113636500027496,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.1,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.2698868710382359,
+        "fold_rmse_log": [
+          0.26686256426121946,
+          0.28281468715184466,
+          0.2599833617016435
+        ],
+        "fold_rounds": [
+          3,
+          56,
+          39
+        ],
+        "rounds": 39
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27411305258851804,
+          "fold_rmse_log": [
+            0.27098150994328046,
+            0.29239906926016596,
+            0.2589585785621077
+          ],
+          "fold_rounds": [
+            5,
+            35,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2750996932419087,
+          "fold_rmse_log": [
+            0.2721496432192512,
+            0.2918885280033019,
+            0.2612609085031731
+          ],
+          "fold_rounds": [
+            2,
+            9,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2698868710382359,
+          "fold_rmse_log": [
+            0.26686256426121946,
+            0.28281468715184466,
+            0.2599833617016435
+          ],
+          "fold_rounds": [
+            3,
+            56,
+            39
+          ],
+          "rounds": 39
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2702310983786261,
+          "fold_rmse_log": [
+            0.2671161094109749,
+            0.2823306575757809,
+            0.2612465281491226
+          ],
+          "fold_rounds": [
+            11,
+            112,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27411305258851804,
+          "fold_rmse_log": [
+            0.27098150994328046,
+            0.29239906926016596,
+            0.2589585785621077
+          ],
+          "fold_rounds": [
+            5,
+            35,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27026402151721163,
+          "fold_rmse_log": [
+            0.26686256426121946,
+            0.2833943375166333,
+            0.26053516277378225
+          ],
+          "fold_rounds": [
+            3,
+            56,
+            27
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2698868710382359,
+          "fold_rmse_log": [
+            0.26686256426121946,
+            0.28281468715184466,
+            0.2599833617016435
+          ],
+          "fold_rounds": [
+            3,
+            56,
+            39
+          ],
+          "rounds": 39
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27406923805151934,
+          "fold_rmse_log": [
+            0.27095107216824044,
+            0.2918314419854891,
+            0.25942520000082864
+          ],
+          "fold_rounds": [
+            5,
+            36,
+            28
+          ],
+          "rounds": 28
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2702113566123141,
+          "fold_rmse_log": [
+            0.2671161094109749,
+            0.28227143227684476,
+            0.2612465281491226
+          ],
+          "fold_rounds": [
+            11,
+            117,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27482730881904943,
+          "fold_rmse_log": [
+            0.27209917963756014,
+            0.29132095757915766,
+            0.2610617892404306
+          ],
+          "fold_rounds": [
+            2,
+            8,
+            8
+          ],
+          "rounds": 8
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2742335880287233,
+          "fold_rmse_log": [
+            0.2700008534388725,
+            0.29114826611648575,
+            0.26155164453081164
+          ],
+          "fold_rounds": [
+            2,
+            19,
+            16
+          ],
+          "rounds": 16
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2702113566123141,
+          "fold_rmse_log": [
+            0.2671161094109749,
+            0.28227143227684476,
+            0.2612465281491226
+          ],
+          "fold_rounds": [
+            11,
+            117,
+            29
+          ],
+          "rounds": 29
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25516822871692096,
+        "mape_price_pct": 19.360622485966463
+      }
+    },
+    {
+      "seed": 46,
+      "method": "tpe",
+      "seconds": 13.951760499970987,
+      "best": {
+        "params": {
+          "max_depth": 3,
+          "learning_rate": 0.2,
+          "min_child_weight": 3
+        },
+        "cv_rmse_log": 0.26963491951947943,
+        "fold_rmse_log": [
+          0.2678466179827096,
+          0.28496600915130393,
+          0.2560921314244249
+        ],
+        "fold_rounds": [
+          2,
+          27,
+          52
+        ],
+        "rounds": 27
+      },
+      "trials": [
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2698868710382359,
+          "fold_rmse_log": [
+            0.26686256426121946,
+            0.28281468715184466,
+            0.2599833617016435
+          ],
+          "fold_rounds": [
+            3,
+            56,
+            39
+          ],
+          "rounds": 39
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2742335880287233,
+          "fold_rmse_log": [
+            0.2700008534388725,
+            0.29114826611648575,
+            0.26155164453081164
+          ],
+          "fold_rounds": [
+            2,
+            19,
+            16
+          ],
+          "rounds": 16
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.1,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2698868710382359,
+          "fold_rmse_log": [
+            0.26686256426121946,
+            0.28281468715184466,
+            0.2599833617016435
+          ],
+          "fold_rounds": [
+            3,
+            56,
+            39
+          ],
+          "rounds": 39
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26963491951947943,
+          "fold_rmse_log": [
+            0.2678466179827096,
+            0.28496600915130393,
+            0.2560921314244249
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            52
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26963491951947943,
+          "fold_rmse_log": [
+            0.2678466179827096,
+            0.28496600915130393,
+            0.2560921314244249
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            52
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.27031768936076905,
+          "fold_rmse_log": [
+            0.2678466179827096,
+            0.2857222779596532,
+            0.2573841721399443
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.27411305258851804,
+          "fold_rmse_log": [
+            0.27098150994328046,
+            0.29239906926016596,
+            0.2589585785621077
+          ],
+          "fold_rounds": [
+            5,
+            35,
+            26
+          ],
+          "rounds": 26
+        },
+        {
+          "params": {
+            "max_depth": 6,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2750996932419087,
+          "fold_rmse_log": [
+            0.2721496432192512,
+            0.2918885280033019,
+            0.2612609085031731
+          ],
+          "fold_rounds": [
+            2,
+            9,
+            6
+          ],
+          "rounds": 6
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 12
+          },
+          "cv_rmse_log": 0.2702113566123141,
+          "fold_rmse_log": [
+            0.2671161094109749,
+            0.28227143227684476,
+            0.2612465281491226
+          ],
+          "fold_rounds": [
+            11,
+            117,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.2702310983786261,
+          "fold_rmse_log": [
+            0.2671161094109749,
+            0.2823306575757809,
+            0.2612465281491226
+          ],
+          "fold_rounds": [
+            11,
+            112,
+            29
+          ],
+          "rounds": 29
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26963491951947943,
+          "fold_rmse_log": [
+            0.2678466179827096,
+            0.28496600915130393,
+            0.2560921314244249
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            52
+          ],
+          "rounds": 27
+        },
+        {
+          "params": {
+            "max_depth": 3,
+            "learning_rate": 0.2,
+            "min_child_weight": 3
+          },
+          "cv_rmse_log": 0.26963491951947943,
+          "fold_rmse_log": [
+            0.2678466179827096,
+            0.28496600915130393,
+            0.2560921314244249
+          ],
+          "fold_rounds": [
+            2,
+            27,
+            52
+          ],
+          "rounds": 27
+        }
+      ],
+      "test": {
+        "rmse_log": 0.25331780599312004,
+        "mape_price_pct": 19.20972664099275
+      }
+    }
+  ],
+  "versions": {
+    "pandas": "3.1.1",
+    "numpy": "2.5.2",
+    "sklearn": "1.9.1",
+    "xgboost": "3.4.1",
+    "lightgbm": "4.7.0",
+    "optuna": "5.1.0"
+  }
+}
