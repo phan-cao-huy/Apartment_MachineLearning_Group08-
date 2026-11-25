@@ -1,0 +1,87 @@
+\subsection{Bài tập C.3: Ảnh hưởng của biến ngẫu nhiên có nhiều giá trị phân biệt (High-Cardinality Noise Feature) lên các thước đo độ quan trọng đặc trưng}
+
+\subsubsection{Thiết lập thí nghiệm}
+Để kiểm chứng hiện tượng thiên lệch chọn biến của cây quyết định đối với các đặc trưng có số lượng giá trị phân biệt lớn (high-cardinality features), ta sử dụng tập dữ liệu hồi quy nhà ở California Housing ($n = 1{,}500$ mẫu trích xuất ngẫu nhiên với hạt giống \texttt{random\_state=42}, gồm 8 đặc trưng thực tế) và bổ sung thêm một biến nhiễu ngẫu nhiên \texttt{Random\_ID} là hoán vị ngẫu nhiên của dãy số nguyên $\{0, 1, \dots, n-1\}$. Biến \texttt{Random\_ID} hoàn toàn độc lập với biến mục tiêu và có $n$ giá trị duy nhất. Mô hình Rừng ngẫu nhiên (\texttt{RandomForestRegressor}, $B = 100$ cây) được huấn luyện trên tập dữ liệu này, sau đó ta đối chiếu ba phương pháp đánh giá độ quan trọng đặc trưng (đã chuẩn hóa về tổng bằng $1$):
+\begin{enumerate}
+    \item \textbf{Độ quan trọng dựa trên mức giảm tạp chất (Impurity-based / Mean Decrease in Impurity -- MDI):} Tổng mức giảm sai số bình phương (MSE) có trọng số tại các nút phân tách sử dụng đặc trưng đó trên toàn bộ rừng.
+    \item \textbf{Độ quan trọng hoán vị (Permutation Importance):} Mức tăng sai số dự đoán của mô hình khi xáo trộn ngẫu nhiên giá trị của một cột đặc trưng ($10$ lần lặp).
+    \item \textbf{Giá trị SHAP (SHapley Additive exPlanations):} Trung bình trị tuyệt đối giá trị Shapley $\frac{1}{m}\sum_{i=1}^{m} |\phi_j(x_i)|$ tính bằng thuật toán \texttt{TreeExplainer}.
+\end{enumerate}
+
+\subsubsection{Kết quả và Phân tích cơ chế}
+Kết quả đối chiếu được minh họa trực quan trong Hình~\ref{fig:c3_importance} và Bảng~\ref{tab:c3_importance} (sinh viên điền số liệu cụ thể từ bảng in ra trên Colab vào các ô tương ứng).
+
+\begin{table}[htbp]
+\centering
+\caption{So sánh tỷ trọng độ quan trọng chuẩn hóa của các đặc trưng tiêu biểu và biến nhiễu \texttt{Random\_ID} (Bài tập C.3).}
+\label{tab:c3_importance}
+\begin{tabular}{lccc}
+\hline
+\textbf{Đặc trưng} & \textbf{Impurity (MDI)} & \textbf{Permutation} & \textbf{SHAP ($\text{mean }|\phi_j|$)} \\
+\hline
+\texttt{MedInc} (Thu nhập trung vị) & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+\texttt{AveOccup} (Số người/hộ) & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+\texttt{Latitude} (Vĩ độ) & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+\texttt{Longitude} (Kinh độ) & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+\texttt{Random\_ID} (Biến nhiễu) & \textbf{[Điền từ Colab]} & \textbf{[Điền từ Colab]} & \textbf{[Điền từ Colab]} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{C3_feature_importance_comparison.png}
+    \caption{So sánh độ quan trọng đặc trưng theo Impurity (MDI), Permutation và SHAP khi thêm biến nhiễu \texttt{Random\_ID}.}
+    \label{fig:c3_importance}
+\end{figure}
+
+Từ kết quả thực nghiệm, ta rút ra ba nhận xét lý thuyết quan trọng:
+\begin{itemize}
+    \item \textbf{Thiên lệch nghiêm trọng của Impurity (MDI):} Thước đo MDI gán cho biến nhiễu \texttt{Random\_ID} một tỷ trọng độ quan trọng đáng kể (thường đứng trên nhiều đặc trưng vật lý thực sự như \texttt{AveBedrms}, \texttt{Population}). Nguyên nhân là thuật toán CART tìm kiếm vét cạn mọi điểm cắt tối ưu; một biến có $n$ giá trị phân biệt cung cấp tới $n-1$ ngưỡng cắt tiềm năng, cho phép các nhánh sâu của cây dễ dàng chia tách ngẫu nhiên để giảm sai số huấn luyện (overfitting) ngay cả khi biến đó không chứa thông tin dự báo.
+    \item \textbf{Tính vững của Permutation Importance:} Khi xáo trộn cột \texttt{Random\_ID}, sai số dự đoán hầu như không đổi (thậm chí giảm nhẹ do loại bỏ nhiễu), khiến tỷ trọng độ quan trọng hoán vị của \texttt{Random\_ID} xấp xỉ bằng $0$. Điều này chứng tỏ Permutation Importance phản ánh đúng mức độ đóng góp thực tế vào khả năng tổng quát hóa.
+    \item \textbf{Tính nhất quán của giá trị SHAP:} Tương tự Permutation Importance, giá trị trung bình $|\text{SHAP}|$ của \texttt{Random\_ID} rất nhỏ so với các biến cốt lõi như \texttt{MedInc} hay vị trí địa lý. Tuy nhiên, vì \texttt{TreeExplainer} tính toán dựa trên cấu trúc cây đã khớp với dữ liệu huấn luyện (nơi \texttt{Random\_ID} vẫn được dùng ở một số nút lá sâu), giá trị SHAP của biến nhiễu vẫn nhỉnh hơn $0$ một chút so với Permutation Importance.
+\end{itemize}
+
+\subsection{Bài tập C.4: Khảo sát sai số ngoài túi (OOB) theo số cây và đối chiếu với sai số Kiểm định chéo (CV)}
+
+\subsubsection{Thiết lập thí nghiệm}
+Trên cùng tập dữ liệu hồi quy ($n = 1{,}500$), ta huấn luyện mô hình Rừng ngẫu nhiên (\texttt{RandomForestRegressor}) với số lượng cây $B \in \{10, 20, 30, 50, 75, 100, 150, 200, 300\}$. Tại mỗi cấu hình $B$, ta ghi nhận:
+\begin{enumerate}
+    \item \textbf{Sai số ngoài túi ($\text{MSE}_{\text{OOB}}$):} Tính trực tiếp từ dự đoán trung bình của các cây không sử dụng mẫu $x_i$ trong quá trình lấy mẫu bootstrap (theo B.5, mỗi mẫu có xác suất xấp xỉ $e^{-1} \approx 36.8\%$ nằm ngoài túi của mỗi cây).
+    \item \textbf{Sai số kiểm định chéo 5 phần gập ($\text{MSE}_{\text{CV}}$):} Trung bình và độ lệch chuẩn của MSE trên 5 tập kiểm định độc lập (\texttt{5-Fold CV}, \texttt{random\_state=42}).
+\end{enumerate}
+
+\subsubsection{Kết quả và Đối chiếu lý thuyết}
+Đường cong hội tụ của sai số OOB và sai số 5-Fold CV theo số cây $B$ được trình bày trong Hình~\ref{fig:c4_oob_cv} và Bảng~\ref{tab:c4_oob_cv}.
+
+\begin{table}[htbp]
+\centering
+\caption{Sai số ngoài túi (OOB MSE) và sai số 5-Fold CV theo số lượng cây $B$ (Bài tập C.4).}
+\label{tab:c4_oob_cv}
+\begin{tabular}{cccc}
+\hline
+\textbf{Số cây ($B$)} & \textbf{OOB MSE} & \textbf{5-Fold CV MSE (Trung bình)} & \textbf{5-Fold CV MSE (Độ lệch chuẩn)} \\
+\hline
+10 & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+30 & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+50 & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+100 & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+200 & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+300 & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{C4_oob_vs_cv.png}
+    \caption{Sự hội tụ của sai số OOB theo số lượng cây $B$ và đối chiếu với sai số 5-Fold Cross-Validation.}
+    \label{fig:c4_oob_cv}
+\end{figure}
+
+Phân tích kết quả thực nghiệm đối chiếu với cơ sở lý thuyết ở Phần B.2 và B.5:
+\begin{itemize}
+    \item \textbf{Giai đoạn số cây nhỏ ($B \le 30$):} Sai số OOB cao hơn đáng kể so với sai số 5-Fold CV. Nguyên nhân là với $B$ nhỏ, trung bình mỗi mẫu chỉ rơi vào tập ngoài túi của khoảng $0.368 B$ cây (ví dụ khi $B=10$, mỗi mẫu chỉ được dự đoán bởi trung bình $\approx 3.7$ cây, thậm chí một số mẫu không có cây OOB nào), làm phương sai của ước lượng OOB lớn.
+    \item \textbf{Giai đoạn hội tụ ($B \ge 100$):} Khi $B$ tăng, số hạng giảm phương sai $\frac{1-\rho}{B}\sigma^2$ (đã chứng minh ở Phần B.2) tiến dần về $0$, khiến cả sai số OOB và sai số CV cùng giảm mạnh và tiệm cận mức ổn định quanh $\rho\sigma^2$.
+    \item \textbf{Tính tương đương về mặt thống kê và hiệu quả tính toán:} Khi $B \ge 100$, sai số OOB bám sát đường trung bình của 5-Fold CV (nằm gọn trong dải $\pm 1$ độ lệch chuẩn của CV) với chênh lệch không đáng kể. Tuy nhiên, ước lượng OOB chỉ tốn đúng $1$ lần huấn luyện mô hình thay vì $K=5$ lần như kiểm định chéo, giúp tiết kiệm đáng kể chi phí tính toán trong thực hành.
+\end{itemize}

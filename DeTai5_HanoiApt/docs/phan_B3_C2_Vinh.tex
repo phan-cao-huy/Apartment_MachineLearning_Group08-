@@ -1,0 +1,341 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage[vietnamese, english, bidi=basic, provide=*]{babel}
+\babelprovide[import, onchar=ids fonts]{vietnamese}
+\babelprovide[import, onchar=ids fonts]{english}
+\babelfont{rm}{Noto Sans}
+\usepackage{enumitem}
+\setlist[itemize]{label=-}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+
+\definecolor{primary}{HTML}{1E3A8A}
+\definecolor{accent}{HTML}{0F766E}
+\definecolor{lightbg}{HTML}{F1F5F9}
+
+\title{\textbf{\color{primary}ĐỀ TÀI 5: CÂY QUYẾT ĐỊNH VÀ CÁC PHƯƠNG PHÁP TỔ HỢP}\\
+\large Phần B.3 (Chứng minh lý thuyết) \& Phần C.2 (Bài tập tính tay AdaBoost)}
+\author{Thành viên thực hiện: Vinh}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Phần B.3: Chứng minh lý thuyết về thuật toán AdaBoost}
+
+\textbf{Đề bài:} Chứng minh AdaBoost là thuật toán cộng dồn từng bước (forward stagewise) cực tiểu hóa mất mát mũ, suy ra $\alpha_t = \frac{1}{2}\ln\left(\frac{1-\epsilon_t}{\epsilon_t}\right)$ và chứng minh sai số huấn luyện của bộ phân loại tổng hợp $F$ thỏa:
+\[
+\frac{1}{n}\sum_{i=1}^{n} \mathbb{I}\{F(x_i) \ne y_i\} \le \prod_{t=1}^{T} 2\sqrt{\epsilon_t(1-\epsilon_t)} \le \exp\left(-2\sum_{t=1}^{T}\gamma_t^2\right), \quad \text{với } \gamma_t = \frac{1}{2} - \epsilon_t.
+\]
+
+\subsection*{1. AdaBoost là thuật toán cộng dồn từng bước cực tiểu hóa mất mát mũ}
+
+Xét tập dữ liệu huấn luyện $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^n$ với $x_i \in \mathcal{X}$ và nhãn nhị phân $y_i \in \{-1, +1\}$. Ta xây dựng bộ phân loại tổ hợp dưới dạng tổ hợp tuyến tính của $T$ bộ phân loại yếu (weak learners) $h_t: \mathcal{X} \to \{-1, +1\}$:
+\[
+F_T(x) = \sum_{t=1}^{T} \alpha_t h_t(x), \quad \alpha_t > 0,
+\]
+và quy tắc quyết định cuối cùng là $H(x) = \operatorname{sign}(F_T(x))$.
+
+Xét hàm mất mát mũ (exponential loss):
+\[
+L(y, F(x)) = \exp(-y F(x)).
+\]
+Theo chiến lược mô hình cộng dồn từng bước (Forward Stagewise Additive Modeling -- FSAM), tại bước lặp thứ $t$ ($t = 1, \dots, T$), giả sử mô hình tích lũy từ các bước trước $F_{t-1}(x) = \sum_{m=1}^{t-1} \alpha_m h_m(x)$ đã được cố định (với quy ước $F_0(x) \equiv 0$). Ta tìm cặp $(\alpha_t, h_t)$ giải bài toán tối ưu:
+\[
+(\alpha_t, h_t) = \arg\min_{\alpha > 0, \, h \in \mathcal{H}} \sum_{i=1}^{n} \exp\Big(-y_i \big(F_{t-1}(x_i) + \alpha h(x_i)\big)\Big).
+\]
+
+Đặt $w_i^{(t)} = \exp(-y_i F_{t-1}(x_i)) > 0$ là trọng số chưa chuẩn hóa của mẫu thứ $i$ tại đầu vòng $t$. Hàm mục tiêu được viết lại thành:
+\[
+J(\alpha, h) = \sum_{i=1}^{n} w_i^{(t)} \exp(-\alpha y_i h(x_i)).
+\]
+Do $y_i, h(x_i) \in \{-1, +1\}$, tích $y_i h(x_i) = +1$ khi $h(x_i) = y_i$ và $y_i h(x_i) = -1$ khi $h(x_i) \ne y_i$. Tách tổng trên thành hai tập chỉ số tương ứng với phân loại đúng và phân loại sai:
+\begin{align*}
+J(\alpha, h) &= e^{-\alpha} \sum_{y_i = h(x_i)} w_i^{(t)} + e^{\alpha} \sum_{y_i \ne h(x_i)} w_i^{(t)} \\
+&= e^{-\alpha} \sum_{i=1}^{n} w_i^{(t)} + \left(e^{\alpha} - e^{-\alpha}\right) \sum_{i=1}^{n} w_i^{(t)} \mathbb{I}\{h(x_i) \ne y_i\}.
+\end{align*}
+
+\textbf{Bước tìm bộ phân loại yếu $h_t$:} Với mọi $\alpha > 0$, ta có $e^{\alpha} - e^{-\alpha} > 0$, trong khi hạng tử $e^{-\alpha}\sum_{i=1}^n w_i^{(t)}$ không phụ thuộc vào $h$. Do đó, cực tiểu hóa $J(\alpha, h)$ theo $h$ tương đương với cực tiểu hóa sai số phân loại có trọng số:
+\[
+h_t = \arg\min_{h \in \mathcal{H}} \sum_{i=1}^{n} w_i^{(t)} \mathbb{I}\{h(x_i) \ne y_i\} = \arg\min_{h \in \mathcal{H}} \sum_{i=1}^{n} D_t(i) \mathbb{I}\{h(x_i) \ne y_i\},
+\]
+trong đó $D_t(i) = \frac{w_i^{(t)}}{\sum_{j=1}^n w_j^{(t)}}$ là phân phối xác suất trọng số trên tập huấn luyện tại vòng $t$.
+
+\textbf{Bước tìm trọng số mô hình $\alpha_t$:} Định nghĩa sai số có trọng số của $h_t$ là:
+\[
+\epsilon_t = \frac{\sum_{i=1}^{n} w_i^{(t)} \mathbb{I}\{h_t(x_i) \ne y_i\}}{\sum_{i=1}^{n} w_i^{(t)}} = \sum_{i=1}^{n} D_t(i) \mathbb{I}\{h_t(x_i) \ne y_i\}.
+\]
+Với điều kiện bộ học yếu tốt hơn đoán ngẫu nhiên ($0 < \epsilon_t < \frac{1}{2}$), chia cả hai vế của $J(\alpha, h_t)$ cho tổng trọng số $W_t = \sum_{i=1}^n w_i^{(t)} > 0$, ta được hàm một biến theo $\alpha$:
+\[
+\tilde{J}(\alpha) = \frac{J(\alpha, h_t)}{W_t} = (1 - \epsilon_t)e^{-\alpha} + \epsilon_t e^{\alpha}.
+\]
+Tính đạo hàm bậc nhất và bậc hai của $\tilde{J}(\alpha)$ theo $\alpha$:
+\[
+\tilde{J}'(\alpha) = -(1 - \epsilon_t)e^{-\alpha} + \epsilon_t e^{\alpha}, \qquad \tilde{J}''(\alpha) = (1 - \epsilon_t)e^{-\alpha} + \epsilon_t e^{\alpha} > 0, \, \forall \alpha \in \mathbb{R}.
+\]
+Vì $\tilde{J}(\alpha)$ lồi chặt trên $\mathbb{R}$, nghiệm cực tiểu toàn cục duy nhất thỏa mãn $\tilde{J}'(\alpha_t) = 0$:
+\[
+\epsilon_t e^{\alpha_t} = (1 - \epsilon_t)e^{-\alpha_t} \iff e^{2\alpha_t} = \frac{1 - \epsilon_t}{\epsilon_t} \iff \alpha_t = \frac{1}{2}\ln\left(\frac{1 - \epsilon_t}{\epsilon_t}\right) > 0.
+\]
+
+\textbf{Bước cập nhật phân phối trọng số:} Sau khi cập nhật $F_t(x) = F_{t-1}(x) + \alpha_t h_t(x)$, trọng số chưa chuẩn hóa cho vòng $t+1$ là:
+\[
+w_i^{(t+1)} = \exp(-y_i F_t(x_i)) = \exp(-y_i F_{t-1}(x_i)) \exp(-\alpha_t y_i h_t(x_i)) = w_i^{(t)} \exp(-\alpha_t y_i h_t(x_i)).
+\]
+Chuẩn hóa về phân phối xác suất bằng cách chia cho $W_{t+1} = \sum_{j=1}^n w_j^{(t+1)}$, ta thu được:
+\[
+D_{t+1}(i) = \frac{w_i^{(t)} \exp(-\alpha_t y_i h_t(x_i))}{\sum_{j=1}^n w_j^{(t)} \exp(-\alpha_t y_j h_t(x_j))} = \frac{D_t(i) \exp(-\alpha_t y_i h_t(x_i))}{Z_t},
+\]
+với $Z_t = \sum_{i=1}^n D_t(i) \exp(-\alpha_t y_i h_t(x_i))$ là hằng số chuẩn hóa. Quy trình này trùng khớp hoàn toàn với thuật toán AdaBoost của Freund và Schapire (1997). \hfill $\blacksquare$
+
+\subsection*{2. Chứng minh chặn trên sai số huấn luyện}
+
+\textbf{Bước 1: Tính tường minh hằng số chuẩn hóa $Z_t$.}
+Ta có:
+\[
+Z_t = \sum_{i=1}^{n} D_t(i) \exp(-\alpha_t y_i h_t(x_i)) = \sum_{y_i = h_t(x_i)} D_t(i) e^{-\alpha_t} + \sum_{y_i \ne h_t(x_i)} D_t(i) e^{\alpha_t} = (1 - \epsilon_t)e^{-\alpha_t} + \epsilon_t e^{\alpha_t}.
+\]
+Thay $e^{\alpha_t} = \sqrt{\frac{1 - \epsilon_t}{\epsilon_t}}$ và $e^{-\alpha_t} = \sqrt{\frac{\epsilon_t}{1 - \epsilon_t}}$ vào biểu thức trên:
+\[
+Z_t = (1 - \epsilon_t)\sqrt{\frac{\epsilon_t}{1 - \epsilon_t}} + \epsilon_t\sqrt{\frac{1 - \epsilon_t}{\epsilon_t}} = \sqrt{\epsilon_t(1 - \epsilon_t)} + \sqrt{\epsilon_t(1 - \epsilon_t)} = 2\sqrt{\epsilon_t(1 - \epsilon_t)}.
+\]
+
+\textbf{Bước 2: Liên hệ giữa trung bình mất mát mũ và tích các hằng số $Z_t$.}
+Với khởi tạo đều $D_1(i) = \frac{1}{n}$, khai triển đệ quy công thức cập nhật trọng số qua $T$ vòng:
+\[
+D_{T+1}(i) = \frac{D_1(i) \prod_{t=1}^{T} \exp(-\alpha_t y_i h_t(x_i))}{\prod_{t=1}^{T} Z_t} = \frac{\exp\left(-y_i \sum_{t=1}^{T} \alpha_t h_t(x_i)\right)}{n \prod_{t=1}^{T} Z_t} = \frac{\exp(-y_i F_T(x_i))}{n \prod_{t=1}^{T} Z_t}.
+\]
+Do $D_{T+1}$ là phân phối xác suất trên $\{1, \dots, n\}$ nên $\sum_{i=1}^n D_{T+1}(i) = 1$. Lấy tổng hai vế theo $i$:
+\[
+1 = \sum_{i=1}^{n} D_{T+1}(i) = \frac{1}{n \prod_{t=1}^{T} Z_t} \sum_{i=1}^{n} \exp(-y_i F_T(x_i)) \implies \frac{1}{n}\sum_{i=1}^{n} \exp(-y_i F_T(x_i)) = \prod_{t=1}^{T} Z_t.
+\]
+
+\textbf{Bước 3: Chặn trên mất mát 0--1 bằng mất mát mũ.}
+Xét hàm chỉ thị sai số dự đoán của bộ phân loại tổng hợp $H(x_i) = \operatorname{sign}(F_T(x_i))$ (quy ước $\operatorname{sign}(0) = 0 \ne y_i$). Nếu $H(x_i) \ne y_i$ thì $y_i F_T(x_i) \le 0 \implies \exp(-y_i F_T(x_i)) \ge e^0 = 1$. Nếu $H(x_i) = y_i$ thì $\exp(-y_i F_T(x_i)) > 0$. Do đó, với mọi $i \in \{1, \dots, n\}$:
+\[
+\mathbb{I}\{H(x_i) \ne y_i\} \le \exp(-y_i F_T(x_i)).
+\]
+Lấy trung bình cộng qua $n$ mẫu huấn luyện, ta thu được bất đẳng thức thứ nhất:
+\[
+\frac{1}{n}\sum_{i=1}^{n} \mathbb{I}\{H(x_i) \ne y_i\} \le \frac{1}{n}\sum_{i=1}^{n} \exp(-y_i F_T(x_i)) = \prod_{t=1}^{T} Z_t = \prod_{t=1}^{T} 2\sqrt{\epsilon_t(1 - \epsilon_t)}.
+\]
+
+\textbf{Bước 4: Đánh giá chặn trên hàm mũ.}
+Đặt $\gamma_t = \frac{1}{2} - \epsilon_t > 0$ (lợi thế của bộ học yếu so với đoán ngẫu nhiên). Khi đó $\epsilon_t = \frac{1}{2} - \gamma_t$ và $1 - \epsilon_t = \frac{1}{2} + \gamma_t$, suy ra:
+\[
+2\sqrt{\epsilon_t(1 - \epsilon_t)} = 2\sqrt{\left(\frac{1}{2} - \gamma_t\right)\left(\frac{1}{2} + \gamma_t\right)} = 2\sqrt{\frac{1}{4} - \gamma_t^2} = \sqrt{1 - 4\gamma_t^2}.
+\]
+Áp dụng bất đẳng thức sơ cấp $1 - u \le e^{-u}$ đúng với mọi $u \in \mathbb{R}$ tại $u = 4\gamma_t^2$:
+\[
+\sqrt{1 - 4\gamma_t^2} \le \sqrt{e^{-4\gamma_t^2}} = \exp(-2\gamma_t^2).
+\]
+Nhân các bất đẳng thức không âm qua $t = 1, \dots, T$, ta thu được bất đẳng thức thứ hai:
+\[
+\prod_{t=1}^{T} 2\sqrt{\epsilon_t(1 - \epsilon_t)} \le \prod_{t=1}^{T} \exp(-2\gamma_t^2) = \exp\left(-2\sum_{t=1}^{T}\gamma_t^2\right).
+\]
+Kết hợp cả hai bất đẳng thức, ta hoàn tất chứng minh:
+\[
+\frac{1}{n}\sum_{i=1}^{n} \mathbb{I}\{H(x_i) \ne y_i\} \le \prod_{t=1}^{T} 2\sqrt{\epsilon_t(1 - \epsilon_t)} \le \exp\left(-2\sum_{t=1}^{T}\gamma_t^2\right). \qquad \blacksquare
+\]
+
+\newpage
+
+\section*{Phần C.2: Bài tập tính tay 3 vòng AdaBoost với cây gốc}
+
+\textbf{Đề bài:} Cho tập dữ liệu một chiều gồm $n = 10$ mẫu $x_i = i$ ($i = 1, \dots, 10$) với nhãn tương ứng:
+\[
+y = (+1, +1, +1, -1, -1, -1, +1, +1, +1, -1).
+\]
+Thực hiện tay $T = 3$ vòng AdaBoost với cây gốc (decision stump); báo cáo $\epsilon_t$, $\alpha_t$, phân phối trọng số $D_t$ và sai số huấn luyện của bộ phân loại tổng hợp sau mỗi vòng.
+
+\subsection*{1. Thiết lập không gian cây gốc (Decision Stumps)}
+
+Trên miền giá trị $x_i \in \{1, 2, \dots, 10\}$, các ngưỡng cắt trung điểm giữa hai điểm liên tiếp là $\theta \in \{1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5\}$ (kèm hai ngưỡng biên $0.5$ và $10.5$). Với mỗi ngưỡng $\theta$ và cực tính $s \in \{+1, -1\}$, cây gốc có dạng:
+\[
+h_{\theta, s}(x) = \begin{cases} +s & \text{nếu } x < \theta, \\ -s & \text{nếu } x > \theta. \end{cases}
+\]
+Quan sát cấu trúc nhãn $y$:
+\begin{itemize}
+    \item Đoạn $[1, 3]$: nhãn $+1$ (3 mẫu: $x_1, x_2, x_3$).
+    \item Đoạn $[4, 6]$: nhãn $-1$ (3 mẫu: $x_4, x_5, x_6$).
+    \item Đoạn $[7, 9]$: nhãn $+1$ (3 mẫu: $x_7, x_8, x_9$).
+    \item Điểm $10$: nhãn $-1$ (1 mẫu: $x_{10}$).
+\end{itemize}
+
+\subsection*{2. Chi tiết tính toán qua 3 vòng lặp}
+
+\subsubsection*{Vòng $t = 1$}
+\begin{itemize}
+    \item \textbf{Phân phối trọng số khởi tạo:}
+    \[
+    D_1(i) = \frac{1}{10} = 0.1000, \quad \forall i = 1, \dots, 10.
+    \]
+    \item \textbf{Tìm cây gốc tối ưu $h_1$:} Xét các ngưỡng ứng viên tiềm năng:
+    \begin{enumerate}
+        \item Ngưỡng $\theta = 3.5$, $s = +1$ ($h(x) = +1$ nếu $x < 3.5$, ngược lại $-1$): dự đoán đúng $\{1, 2, 3, 4, 5, 6, 10\}$ (7 mẫu), sai $\{7, 8, 9\}$ (3 mẫu). Sai số: $\epsilon = 3 \times 0.1 = 0.3000$.
+        \item Ngưỡng $\theta = 6.5$, $s = +1$ ($h(x) = +1$ nếu $x < 6.5$, ngược lại $-1$): dự đoán đúng $\{1, 2, 3, 10\}$ (4 mẫu), sai $\{4, 5, 6, 7, 8, 9\}$ (6 mẫu). Sai số: $\epsilon = 0.6000$.
+        \item Ngưỡng $\theta = 9.5$, $s = +1$ ($h(x) = +1$ nếu $x < 9.5$, ngược lại $-1$): dự đoán đúng $\{1, 2, 3, 7, 8, 9, 10\}$ (7 mẫu), sai $\{4, 5, 6\}$ (3 mẫu). Sai số: $\epsilon = 3 \times 0.1 = 0.3000$.
+    \end{enumerate}
+    Hai cây gốc tại $\theta = 3.5$ và $\theta = 9.5$ đều đạt sai số cực tiểu $\epsilon_1 = 0.3$. Theo quy ước chọn ngưỡng nhỏ hơn khi hòa (tiêu chuẩn duyệt tăng dần từ trái sang phải), ta chọn:
+    \[
+    h_1(x) = \begin{cases} +1 & \text{nếu } x < 3.5, \\ -1 & \text{nếu } x > 3.5. \end{cases}
+    \]
+    \item \textbf{Sai số có trọng số và trọng số mô hình:}
+    \[
+    \epsilon_1 = 0.3000, \qquad \alpha_1 = \frac{1}{2}\ln\left(\frac{1 - 0.3}{0.3}\right) = \frac{1}{2}\ln\left(\frac{7}{3}\right) \approx 0.42365.
+    \]
+    \item \textbf{Cập nhật phân phối trọng số $D_2$:}
+    Ta có $Z_1 = 2\sqrt{0.3 \times 0.7} = 2\sqrt{0.21} \approx 0.91652$.
+    \begin{itemize}
+        \item Với 7 mẫu phân loại đúng ($i \in \{1, 2, 3, 4, 5, 6, 10\}$):
+        \[
+        D_2(i) = \frac{D_1(i) e^{-\alpha_1}}{Z_1} = \frac{0.1 \times \sqrt{3/7}}{2\sqrt{21/100}} = \frac{1}{14} \approx 0.07143.
+        \]
+        \item Với 3 mẫu phân loại sai ($i \in \{7, 8, 9\}$):
+        \[
+        D_2(i) = \frac{D_1(i) e^{\alpha_1}}{Z_1} = \frac{0.1 \times \sqrt{7/3}}{2\sqrt{21/100}} = \frac{1}{6} \approx 0.16667.
+        \]
+    \end{itemize}
+    Kiểm tra tổng: $7 \times \frac{1}{14} + 3 \times \frac{1}{6} = \frac{1}{2} + \frac{1}{2} = 1$.
+    \item \textbf{Đánh giá mô hình tổng hợp $F_1(x) = \alpha_1 h_1(x)$:}
+    Dự đoán $H_1(x) = \operatorname{sign}(F_1(x)) = h_1(x)$ sai 3 mẫu $\{7, 8, 9\}$, nên sai số huấn luyện sau vòng 1 là:
+    \[
+    \text{Err}(H_1) = \frac{3}{10} = 0.3000 \, (30\%).
+    \]
+\end{itemize}
+
+\subsubsection*{Vòng $t = 2$}
+\begin{itemize}
+    \item \textbf{Tìm cây gốc tối ưu $h_2$ dưới phân phối $D_2$:}
+    \begin{enumerate}
+        \item Ngưỡng $\theta = 3.5, s = +1$: sai $\{7, 8, 9\} \implies \epsilon = 3 \times \frac{1}{6} = 0.5000$.
+        \item Ngưỡng $\theta = 6.5, s = -1$ ($h(x) = -1$ nếu $x < 6.5$, ngược lại $+1$): dự đoán đúng $\{4, 5, 6, 7, 8, 9\}$ (6 mẫu), sai $\{1, 2, 3, 10\}$ (4 mẫu). Sai số: $\epsilon = 4 \times \frac{1}{14} = \frac{4}{14} \approx 0.28571$.
+        \item Ngưỡng $\theta = 9.5, s = +1$ ($h(x) = +1$ nếu $x < 9.5$, ngược lại $-1$): dự đoán đúng $\{1, 2, 3, 7, 8, 9, 10\}$ (7 mẫu), sai $\{4, 5, 6\}$ (3 mẫu). Sai số: $\epsilon = 3 \times \frac{1}{14} = \frac{3}{14} \approx 0.21429$.
+    \end{enumerate}
+    Sai số nhỏ nhất đạt được tại $\theta = 9.5, s = +1$:
+    \[
+    h_2(x) = \begin{cases} +1 & \text{nếu } x < 9.5, \\ -1 & \text{nếu } x > 9.5. \end{cases}
+    \]
+    \item \textbf{Sai số có trọng số và trọng số mô hình:}
+    \[
+    \epsilon_2 = \frac{3}{14} \approx 0.21429, \qquad \alpha_2 = \frac{1}{2}\ln\left(\frac{1 - 3/14}{3/14}\right) = \frac{1}{2}\ln\left(\frac{11}{3}\right) \approx 0.64964.
+    \]
+    \item \textbf{Cập nhật phân phối trọng số $D_3$:}
+    Ta có $Z_2 = 2\sqrt{\frac{3}{14} \cdot \frac{11}{14}} = \frac{\sqrt{33}}{7} \approx 0.82065$, và $e^{\alpha_2} = \sqrt{\frac{11}{3}}$, $e^{-\alpha_2} = \sqrt{\frac{3}{11}}$.
+    \begin{itemize}
+        \item Nhóm mẫu đúng ở cả vòng 1 và vòng 2 ($i \in \{1, 2, 3, 10\}$, có $D_2(i) = \frac{1}{14}$):
+        \[
+        D_3(i) = \frac{\frac{1}{14} \sqrt{3/11}}{\sqrt{33}/7} = \frac{1}{22} \approx 0.04545.
+        \]
+        \item Nhóm mẫu đúng ở vòng 1 nhưng sai ở vòng 2 ($i \in \{4, 5, 6\}$, có $D_2(i) = \frac{1}{14}$):
+        \[
+        D_3(i) = \frac{\frac{1}{14} \sqrt{11/3}}{\sqrt{33}/7} = \frac{1}{6} \approx 0.16667.
+        \]
+        \item Nhóm mẫu sai ở vòng 1 nhưng đúng ở vòng 2 ($i \in \{7, 8, 9\}$, có $D_2(i) = \frac{1}{6}$):
+        \[
+        D_3(i) = \frac{\frac{1}{6} \sqrt{3/11}}{\sqrt{33}/7} = \frac{7}{66} \approx 0.10606.
+        \]
+    \end{itemize}
+    Kiểm tra tổng: $4 \times \frac{1}{22} + 3 \times \frac{1}{6} + 3 \times \frac{7}{66} = \frac{12 + 33 + 21}{66} = \frac{66}{66} = 1$.
+    \item \textbf{Đánh giá mô hình tổng hợp $F_2(x) = \alpha_1 h_1(x) + \alpha_2 h_2(x)$:}
+    Vì $\alpha_2 \approx 0.64964 > \alpha_1 \approx 0.42365$, giá trị $F_2(x)$ trên từng khoảng là:
+    \begin{itemize}
+        \item $x \in \{1, 2, 3\}$: $F_2(x) = +0.42365 + 0.64964 = +1.07329 \implies H_2(x) = +1$ (Đúng 3 mẫu).
+        \item $x \in \{4, 5, 6\}$: $F_2(x) = -0.42365 + 0.64964 = +0.22599 \implies H_2(x) = +1$ (Sai 3 mẫu).
+        \item $x \in \{7, 8, 9\}$: $F_2(x) = -0.42365 + 0.64964 = +0.22599 \implies H_2(x) = +1$ (Đúng 3 mẫu).
+        \item $x = 10$: $F_2(x) = -0.42365 - 0.64964 = -1.07329 \implies H_2(x) = -1$ (Đúng 1 mẫu).
+    \end{itemize}
+    Sai số huấn luyện sau vòng 2 vẫn là $\text{Err}(H_2) = \frac{3}{10} = 0.3000 \, (30\%)$ (chuyển từ sai nhóm $\{7, 8, 9\}$ sang sai nhóm $\{4, 5, 6\}$), nhưng mất mát mũ giảm mạnh từ $0.91652$ xuống $Z_1 Z_2 = 0.91652 \times 0.82065 \approx 0.75214$.
+\end{itemize}
+
+\subsubsection*{Vòng $t = 3$}
+\begin{itemize}
+    \item \textbf{Tìm cây gốc tối ưu $h_3$ dưới phân phối $D_3$:}
+    Xét các ngưỡng phân tách:
+    \begin{enumerate}
+        \item Ngưỡng $\theta = 3.5, s = +1$: sai $\{7, 8, 9\} \implies \epsilon = 3 \times \frac{7}{66} = \frac{21}{66} \approx 0.31818$.
+        \item Ngưỡng $\theta = 6.5, s = -1$ ($h(x) = -1$ nếu $x < 6.5$, ngược lại $+1$): dự đoán đúng $\{4, 5, 6, 7, 8, 9\}$ (6 mẫu), sai $\{1, 2, 3, 10\}$ (4 mẫu). Sai số:
+        \[
+        \epsilon = 4 \times \frac{1}{22} = \frac{4}{22} = \frac{12}{66} \approx 0.18182.
+        \]
+        \item Ngưỡng $\theta = 9.5, s = +1$: sai $\{4, 5, 6\} \implies \epsilon = 3 \times \frac{1}{6} = 0.5000$.
+    \end{enumerate}
+    Sai số nhỏ nhất đạt được tại $\theta = 6.5, s = -1$:
+    \[
+    h_3(x) = \begin{cases} -1 & \text{nếu } x < 6.5, \\ +1 & \text{nếu } x > 6.5. \end{cases}
+    \]
+    \item \textbf{Sai số có trọng số và trọng số mô hình:}
+    \[
+    \epsilon_3 = \frac{2}{11} \approx 0.18182, \qquad \alpha_3 = \frac{1}{2}\ln\left(\frac{1 - 2/11}{2/11}\right) = \frac{1}{2}\ln\left(\frac{9}{2}\right) \approx 0.75204.
+    \]
+    \item \textbf{Cập nhật phân phối trọng số $D_4$:}
+    Ta có $Z_3 = 2\sqrt{\frac{2}{11} \cdot \frac{9}{11}} = \frac{6\sqrt{2}}{11} \approx 0.77139$, và $e^{\alpha_3} = \sqrt{\frac{9}{2}} = \frac{3}{\sqrt{2}}$, $e^{-\alpha_3} = \frac{\sqrt{2}}{3}$.
+    \begin{itemize}
+        \item Nhóm $i \in \{1, 2, 3, 10\}$ (sai ở vòng 3, $D_3(i) = \frac{1}{22}$):
+        \[
+        D_4(i) = \frac{\frac{1}{22} \cdot \frac{3}{\sqrt{2}}}{\frac{6\sqrt{2}}{11}} = \frac{1}{8} = 0.12500.
+        \]
+        \item Nhóm $i \in \{4, 5, 6\}$ (đúng ở vòng 3, $D_3(i) = \frac{1}{6}$):
+        \[
+        D_4(i) = \frac{\frac{1}{6} \cdot \frac{\sqrt{2}}{3}}{\frac{6\sqrt{2}}{11}} = \frac{11}{108} \approx 0.10185.
+        \]
+        \item Nhóm $i \in \{7, 8, 9\}$ (đúng ở vòng 3, $D_3(i) = \frac{7}{66}$):
+        \[
+        D_4(i) = \frac{\frac{7}{66} \cdot \frac{\sqrt{2}}{3}}{\frac{6\sqrt{2}}{11}} = \frac{7}{108} \approx 0.06481.
+        \]
+    \end{itemize}
+    Kiểm tra tổng: $4 \times \frac{1}{8} + 3 \times \frac{11}{108} + 3 \times \frac{7}{108} = \frac{1}{2} + \frac{54}{108} = 1$.
+    \item \textbf{Đánh giá mô hình tổng hợp $F_3(x) = \alpha_1 h_1(x) + \alpha_2 h_2(x) + \alpha_3 h_3(x)$:}
+    \begin{itemize}
+        \item $x \in \{1, 2, 3\}$: $F_3(x) = +0.42365 + 0.64964 - 0.75204 = +0.32125 \implies H_3(x) = +1$ (Đúng 3 mẫu).
+        \item $x \in \{4, 5, 6\}$: $F_3(x) = -0.42365 + 0.64964 - 0.75204 = -0.52605 \implies H_3(x) = -1$ (Đúng 3 mẫu).
+        \item $x \in \{7, 8, 9\}$: $F_3(x) = -0.42365 + 0.64964 + 0.75204 = +0.97803 \implies H_3(x) = +1$ (Đúng 3 mẫu).
+        \item $x = 10$: $F_3(x) = -0.42365 - 0.64964 + 0.75204 = -0.32125 \implies H_3(x) = -1$ (Đúng 1 mẫu).
+    \end{itemize}
+    Toàn bộ $10/10$ mẫu đều được phân loại chính xác! Sai số huấn luyện giảm về:
+    \[
+    \text{Err}(H_3) = \frac{0}{10} = 0.0000 \, (0\%).
+    \]
+\end{itemize}
+
+\subsection*{3. Bảng tổng hợp kết quả 3 vòng lặp}
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}ccccccc@{}}
+\toprule
+\textbf{Vòng $t$} & \textbf{Cây gốc $h_t(x)$} & \textbf{Sai số $\epsilon_t$} & \textbf{Trọng số $\alpha_t$} & \textbf{Hệ số $Z_t$} & \textbf{Chặn trên $\prod_{m=1}^t Z_m$} & \textbf{Sai số $\text{Err}(H_t)$} \\
+\midrule
+$1$ & $+1$ nếu $x < 3.5$, $-1$ nếu $x > 3.5$ & $0.30000$ & $0.42365$ & $0.91652$ & $0.91652$ & $3/10 = 30.0\%$ \\
+$2$ & $+1$ nếu $x < 9.5$, $-1$ nếu $x > 9.5$ & $0.21429$ & $0.64964$ & $0.82065$ & $0.75214$ & $3/10 = 30.0\%$ \\
+$3$ & $-1$ nếu $x < 6.5$, $+1$ nếu $x > 6.5$ & $0.18182$ & $0.75204$ & $0.77139$ & $0.58019$ & $0/10 = 0.0\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Tổng hợp các đại lượng qua 3 vòng lặp AdaBoost trên tập dữ liệu 10 mẫu.}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}ccccccccccc@{}}
+\toprule
+\textbf{Mẫu $x_i$} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} \\
+\midrule
+\textbf{Nhãn $y_i$} & $+1$ & $+1$ & $+1$ & $-1$ & $-1$ & $-1$ & $+1$ & $+1$ & $+1$ & $-1$ \\
+\midrule
+$D_1(i)$ & $0.1000$ & $0.1000$ & $0.1000$ & $0.1000$ & $0.1000$ & $0.1000$ & $0.1000$ & $0.1000$ & $0.1000$ & $0.1000$ \\
+$D_2(i)$ & $0.0714$ & $0.0714$ & $0.0714$ & $0.0714$ & $0.0714$ & $0.0714$ & $0.1667$ & $0.1667$ & $0.1667$ & $0.0714$ \\
+$D_3(i)$ & $0.0455$ & $0.0455$ & $0.0455$ & $0.1667$ & $0.1667$ & $0.1667$ & $0.1061$ & $0.1061$ & $0.1061$ & $0.0455$ \\
+$D_4(i)$ & $0.1250$ & $0.1250$ & $0.1250$ & $0.1019$ & $0.1019$ & $0.1019$ & $0.0648$ & $0.0648$ & $0.0648$ & $0.1250$ \\
+\bottomrule
+\end{tabular}
+\caption{Diễn biến phân phối trọng số $D_t(i)$ của 10 mẫu qua các vòng lặp.}
+\end{table}
+
+\end{document}

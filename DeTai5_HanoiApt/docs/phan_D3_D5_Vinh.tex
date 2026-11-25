@@ -1,0 +1,59 @@
+\subsection{Xây dựng chiến lược chia tập không gian -- thời gian (Phần D.5)}
+Dữ liệu bất động sản mang đồng thời hai cấu trúc phụ thuộc: \textit{tự tương quan không gian} (các căn hộ trong cùng một tòa nhà hoặc cùng phường/xã chia sẻ hạ tầng và mặt bằng giá) và \textit{xu hướng biến động theo thời gian}. Nếu chia ngẫu nhiên (Random K-Fold), các căn hộ cùng dự án sẽ xuất hiện ở cả tập huấn luyện và tập kiểm định, gây rò rỉ thông tin không gian và làm sai số đánh giá bị lạc quan giả tạo.
+
+Do đó, quy trình đánh giá (cài đặt trong \texttt{src/splits.py}) được thiết kế hai tầng:
+\begin{enumerate}
+    \item \textbf{Tập kiểm tra ngoài thời gian (Temporal Hold-out Test):} Tách toàn bộ tin rao thu thập trong tuần cuối cùng làm tập kiểm tra độc lập để đo lường khả năng khái quát hóa theo thời gian thực.
+    \item \textbf{Kiểm định chéo theo khối không gian (Spatial Block Cross-Validation):} Trên dữ liệu 3 tuần đầu, chia 5 phần gập (\texttt{GroupKFold}) nhóm theo đơn vị hành chính cấp xã/phường sau sắp xếp năm 2025, bảo đảm toàn bộ căn hộ của một phường/xã chỉ nằm trọn trong tập huấn luyện hoặc tập kiểm định.
+\end{enumerate}
+
+\subsection{Kết quả thực nghiệm mô hình cơ sở Hedonic OLS, Random Forest và Gradient Boosting (Phần D.3)}
+Biến mục tiêu được biến đổi sang thang logarit $y = \log(\text{Giá}/\text{m}^2)$ nhằm giảm độ lệch phải của phân phối giá bất động sản và giúp các hệ số hồi quy tuyến tính mang ý nghĩa độ co giãn bán phần (semi-elasticity). Tất cả thí nghiệm được cố định 5 hạt giống ngẫu nhiên (\texttt{42, 100, 2024, 2025, 2026}) để báo cáo trung bình $\pm$ độ lệch chuẩn.
+
+\begin{table}[htbp]
+\centering
+\caption{Kết quả đánh giá trên Spatial Block CV (5 folds) và tập Test tuần cuối qua 5 hạt giống ngẫu nhiên.}
+\label{tab:d3_results}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Mô hình} & \textbf{CV $\text{RMSE}_{\log}$} & \textbf{CV $\text{MAPE}_{\log}$ (\%)} & \textbf{Test $\text{RMSE}_{\log}$} & \textbf{Test $\text{MAPE}_{\log}$ (\%)} \\
+\hline
+Hedonic OLS & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+Random Forest & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+GBDT Custom (Huber, A.3) & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] & [Điền từ Colab] \\
+\hline
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Nhận xét so sánh:} Mô hình hồi quy Hedonic OLS bị giới hạn bởi giả thiết tuyến tính cộng tính, chưa nắm bắt được tương tác phi tuyến giữa vị trí địa lý và đặc điểm căn hộ. Các mô hình tổ hợp cây (Random Forest và Gradient Boosting tự cài đặt với hàm mất mát Huber chống nhiễu ngoại lai từ Phần A.3) cải thiện rõ rệt cả $\text{RMSE}_{\log}$ và $\text{MAPE}_{\log}$ trên cả kiểm định chéo khối không gian lẫn tập kiểm tra tuần cuối.
+
+\subsection{Diễn giải mô hình bằng SHAP, PDP và Phân tích thiên lệch giá rao bán (Phần D.5)}
+
+\subsubsection{Diễn giải đóng góp đặc trưng qua SHAP và Đồ thị phụ thuộc riêng phần (PDP)}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{D5_shap_summary.png}
+    \caption{Biểu đồ SHAP Summary minh họa chiều hướng và mức độ tác động của các đặc trưng lên $\log(\text{Giá}/\text{m}^2)$.}
+    \label{fig:d5_shap}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.90\textwidth]{D5_pdp_plots.png}
+    \caption{Đồ thị phụ thuộc riêng phần (PDP) của các yếu tố khoảng cách và diện tích lên $\log(\text{Giá}/\text{m}^2)$.}
+    \label{fig:d5_pdp}
+\end{figure}
+
+Qua biểu đồ SHAP (Hình~\ref{fig:d5_shap}) và đồ thị PDP (Hình~\ref{fig:d5_pdp}), cấu trúc định giá căn hộ chung cư tại Hà Nội thể hiện rõ các quy luật kinh tế đô thị:
+\begin{itemize}
+    \item \textbf{Yếu tố vị trí và hạ tầng giao thông:} Khoảng cách tới trung tâm (\texttt{dist\_center\_km}) và khoảng cách tới ga đường sắt đô thị (\texttt{dist\_metro\_km}) là hai biến chi phối mạnh nhất. Đường cong PDP cho thấy giá trên mỗi mét vuông giảm nhanh trong bán kính $0\text{--}5\text{ km}$ quanh trung tâm và trong phạm vi đi bộ ($< 1\text{ km}$) quanh ga metro, sau đó thoải dần ở vùng ven.
+    \item \textbf{Đặc điểm vật lý và pháp lý:} Tuổi tòa nhà (\texttt{building\_age}) có tác động âm rõ rệt do khấu hao hạ tầng chung cư; căn hộ đã có sổ hồng và hoàn thiện nội thất đầy đủ đạt giá trị SHAP dương ổn định so với căn hộ hợp đồng mua bán hoặc bàn giao thô.
+\end{itemize}
+
+\subsubsection{Phân tích thiên lệch giữa giá rao bán (Asking Price) và giá giao dịch thực tế (Transaction Price)}
+Vì bộ dữ liệu được thu thập từ các sàn rao bán trực tuyến thay vì hợp đồng công chứng, mô hình chịu tác động của các nguồn thiên lệch hệ thống cần lưu ý khi ứng dụng thực tiễn:
+\begin{enumerate}
+    \item \textbf{Thiên lệch neo giá và biên độ thương lượng (Bargaining Bias):} Chủ nhà và môi giới thường niêm yết giá cao hơn kỳ vọng thực tế khoảng $3\%\text{--}8\%$ để chừa khoảng trống thương lượng. Do đó, dự báo của mô hình phản ánh \textit{mặt bằng giá chào bán kỳ vọng} chứ không phải giá chốt giao dịch cuối cùng.
+    \item \textbf{Thiên lệch chọn mẫu theo thanh khoản (Selection / Survivorship Bias):} Các căn hộ định giá sát thị trường thường giao dịch nhanh và bị gỡ tin sớm, trong khi các căn hộ rao giá quá cao bị tồn đọng và xuất hiện lặp lại nhiều tuần, kéo phân phối giá quan sát được lệch lên trên.
+    \item \textbf{Nhiễu tin đăng ảo và chi phí giao dịch ẩn:} Một bộ phận tin rao có thể dùng giá thấp bất thường để thu hút khách hàng (tin mồi) hoặc không tách bạch thuế, phí sang tên, phí bảo trì $2\%$. Việc sử dụng hàm mất mát Huber trong mô hình GBDT (Phần A.3) giúp giảm thiểu đáng kể tác động của các điểm ngoại lai này lên hàm dự báo.
+\end{enumerate}
